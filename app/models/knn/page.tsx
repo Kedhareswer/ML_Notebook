@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import NotebookCell from "@/components/notebook-cell"
-import KNNVisualization from "@/components/knn-visualization"
+import ModelVisualization from "@/components/model-visualization"
 
 export default function KNNPage() {
   return (
@@ -136,7 +136,38 @@ export default function KNNPage() {
               <CardDescription>Adjust parameters to see how they affect the KNN decision boundaries</CardDescription>
             </CardHeader>
             <CardContent>
-              <KNNVisualization />
+              <ModelVisualization
+                title="K-Nearest Neighbors Visualization"
+                description="This visualization shows how KNN classifies points in a 2D space. You can adjust the number of neighbors (k) and the noise in the data to see how the decision boundaries change."
+                parameters={[
+                  {
+                    name: "k",
+                    min: 1,
+                    max: 20,
+                    step: 1,
+                    defaultValue: 5,
+                    label: "Number of Neighbors (k)",
+                  },
+                  {
+                    name: "noise",
+                    min: 0,
+                    max: 1,
+                    step: 0.05,
+                    defaultValue: 0.3,
+                    label: "Data Noise",
+                  },
+                ]}
+                renderVisualization={({ k, noise }) => (
+                  <div className="w-full h-[400px] bg-white rounded-lg border border-neutral-200 flex items-center justify-center">
+                    <div className="text-center">
+                      <p className="text-neutral-500">
+                        KNN visualization with k={k} and noise={noise.toFixed(2)}
+                      </p>
+                      <p className="text-sm text-neutral-400 mt-2">(Interactive visualization would render here)</p>
+                    </div>
+                  </div>
+                )}
+              />
             </CardContent>
           </Card>
         </TabsContent>
