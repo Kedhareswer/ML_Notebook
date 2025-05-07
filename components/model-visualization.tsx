@@ -10,7 +10,7 @@ interface Parameter {
   min: number
   max: number
   step: number
-  default: number
+  defaultValue: number
   label: string
 }
 
@@ -41,7 +41,7 @@ export default function ModelVisualization({
   useEffect(() => {
     const initialParams: Record<string, number> = {}
     parameters.forEach((param) => {
-      initialParams[param.name] = param.default
+      initialParams[param.name] = param.defaultValue
     })
     setParams(initialParams)
   }, [parameters])
@@ -91,7 +91,7 @@ export default function ModelVisualization({
                     {param.label}
                   </Label>
                   <span className="text-sm text-neutral-600">
-                    {params[param.name]?.toFixed(2) || param.default.toFixed(2)}
+                    {params[param.name]?.toFixed(2) || param.defaultValue.toFixed(2)}
                   </span>
                 </div>
                 <Slider
@@ -99,7 +99,7 @@ export default function ModelVisualization({
                   min={param.min}
                   max={param.max}
                   step={param.step}
-                  value={[params[param.name] || param.default]}
+                  value={[params[param.name] || param.defaultValue]}
                   onValueChange={(value) => handleParamChange(param.name, value)}
                   className="notebook-slider"
                 />

@@ -145,7 +145,7 @@ export default function KNNPage() {
                     min: 1,
                     max: 20,
                     step: 1,
-                    defaultValue: 5,
+                    default: 5,
                     label: "Number of Neighbors (k)",
                   },
                   {
@@ -153,20 +153,28 @@ export default function KNNPage() {
                     min: 0,
                     max: 1,
                     step: 0.05,
-                    defaultValue: 0.3,
+                    default: 0.3,
                     label: "Data Noise",
                   },
                 ]}
-                renderVisualization={({ k, noise }) => (
-                  <div className="w-full h-[400px] bg-white rounded-lg border border-neutral-200 flex items-center justify-center">
-                    <div className="text-center">
-                      <p className="text-neutral-500">
-                        KNN visualization with k={k} and noise={noise.toFixed(2)}
-                      </p>
-                      <p className="text-sm text-neutral-400 mt-2">(Interactive visualization would render here)</p>
-                    </div>
-                  </div>
-                )}
+                renderVisualization={(ctx, params, width, height) => {
+                  // Simple placeholder visualization
+                  if (ctx) {
+                    ctx.fillStyle = "#f0f0f0"
+                    ctx.fillRect(0, 0, width, height)
+
+                    ctx.font = "16px Arial"
+                    ctx.fillStyle = "#333"
+                    ctx.textAlign = "center"
+                    ctx.fillText(
+                      `KNN visualization with k=${params.k} and noise=${params.noise.toFixed(2)}`,
+                      width / 2,
+                      height / 2,
+                    )
+                  }
+                }}
+                width={600}
+                height={400}
               />
             </CardContent>
           </Card>
