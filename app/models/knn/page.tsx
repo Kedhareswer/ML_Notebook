@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import NotebookCell from "@/components/notebook-cell"
-import ModelVisualization from "@/components/model-visualization"
+import KNNVisualization from "@/components/knn-visualization"
 
 export default function KNNPage() {
   return (
@@ -136,46 +136,7 @@ export default function KNNPage() {
               <CardDescription>Adjust parameters to see how they affect the KNN decision boundaries</CardDescription>
             </CardHeader>
             <CardContent>
-              <ModelVisualization
-                title="K-Nearest Neighbors Visualization"
-                description="This visualization shows how KNN classifies points in a 2D space. You can adjust the number of neighbors (k) and the noise in the data to see how the decision boundaries change."
-                parameters={[
-                  {
-                    name: "k",
-                    min: 1,
-                    max: 20,
-                    step: 1,
-                    default: 5,
-                    label: "Number of Neighbors (k)",
-                  },
-                  {
-                    name: "noise",
-                    min: 0,
-                    max: 1,
-                    step: 0.05,
-                    default: 0.3,
-                    label: "Data Noise",
-                  },
-                ]}
-                renderVisualization={(ctx, params, width, height) => {
-                  // Simple placeholder visualization
-                  if (ctx) {
-                    ctx.fillStyle = "#f0f0f0"
-                    ctx.fillRect(0, 0, width, height)
-
-                    ctx.font = "16px Arial"
-                    ctx.fillStyle = "#333"
-                    ctx.textAlign = "center"
-                    ctx.fillText(
-                      `KNN visualization with k=${params.k} and noise=${params.noise.toFixed(2)}`,
-                      width / 2,
-                      height / 2,
-                    )
-                  }
-                }}
-                width={600}
-                height={400}
-              />
+              <KNNVisualization />
             </CardContent>
           </Card>
         </TabsContent>
