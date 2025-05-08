@@ -207,7 +207,7 @@ const RegularizedRegressionViz: React.FC = () => {
     ctx.stroke()
 
     // Draw data points
-    ctx.fillStyle = "rgba(0, 0, 255, 0.5)"
+    ctx.fillStyle = "rgba(0, 0, 0, 0.5)"
     data.forEach((point) => {
       ctx.beginPath()
       ctx.arc(scaleX(point.x), scaleY(point.y), 4, 0, Math.PI * 2)
@@ -241,13 +241,13 @@ const RegularizedRegressionViz: React.FC = () => {
     }
 
     // Draw OLS model
-    drawModel(models.ols, "rgba(255, 0, 0, 0.8)", "OLS")
+    drawModel(models.ols, "rgba(40, 40, 40, 0.8)", "OLS")
 
     // Draw active model based on tab
     if (activeTab === "ridge") {
-      drawModel(models.ridge, "rgba(0, 128, 0, 0.8)", "Ridge")
+      drawModel(models.ridge, "rgba(100, 100, 100, 0.8)", "Ridge")
     } else {
-      drawModel(models.lasso, "rgba(128, 0, 128, 0.8)", "Lasso")
+      drawModel(models.lasso, "rgba(160, 160, 160, 0.8)", "Lasso")
     }
 
     // Draw coefficient comparison
@@ -281,13 +281,13 @@ const RegularizedRegressionViz: React.FC = () => {
 
       // OLS coefficient
       const olsHeight = (Math.abs(models.ols[i]) / maxCoef) * maxHeight
-      ctx.fillStyle = "rgba(255, 0, 0, 0.8)"
+      ctx.fillStyle = "rgba(40, 40, 40, 0.8)"
       ctx.fillRect(x, startY - olsHeight * Math.sign(models.ols[i]), barWidth, olsHeight)
 
       // Ridge or Lasso coefficient
       const regCoef = activeTab === "ridge" ? models.ridge[i] : models.lasso[i]
       const regHeight = (Math.abs(regCoef) / maxCoef) * maxHeight
-      ctx.fillStyle = activeTab === "ridge" ? "rgba(0, 128, 0, 0.8)" : "rgba(128, 0, 128, 0.8)"
+      ctx.fillStyle = activeTab === "ridge" ? "rgba(100, 100, 100, 0.8)" : "rgba(160, 160, 160, 0.8)"
       ctx.fillRect(x + barWidth, startY - regHeight * Math.sign(regCoef), barWidth, regHeight)
 
       // Label

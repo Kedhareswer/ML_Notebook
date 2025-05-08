@@ -205,12 +205,12 @@ export function SearchButton() {
       <Button
         variant="outline"
         size="sm"
-        className="hidden md:flex items-center gap-2 text-neutral-600 hover:text-neutral-900"
+        className="hidden md:flex items-center gap-2 text-gray-600 hover:text-black"
         onClick={() => setOpen(true)}
       >
         <SearchIcon className="h-4 w-4" />
         <span>Search</span>
-        <kbd className="ml-2 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-neutral-300 bg-neutral-100 px-1.5 font-mono text-[10px] font-medium text-neutral-600">
+        <kbd className="ml-2 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-gray-300 bg-gray-100 px-1.5 font-mono text-[10px] font-medium text-gray-600">
           <span className="text-xs">⌘</span>K
         </kbd>
       </Button>
@@ -305,7 +305,7 @@ function SearchDialog({ open, setOpen }: { open: boolean; setOpen: (open: boolea
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[550px] p-0">
         <div className="relative">
-          <SearchIcon className="absolute left-4 top-3.5 h-5 w-5 text-neutral-500" />
+          <SearchIcon className="absolute left-4 top-3.5 h-5 w-5 text-gray-500" />
           <Input
             ref={inputRef}
             placeholder="Search for models, concepts, or topics..."
@@ -318,7 +318,7 @@ function SearchDialog({ open, setOpen }: { open: boolean; setOpen: (open: boolea
             <Button
               variant="ghost"
               size="icon"
-              className="absolute right-2 top-2.5 h-7 w-7 text-neutral-500 hover:text-neutral-900"
+              className="absolute right-2 top-2.5 h-7 w-7 text-gray-500 hover:text-black"
               onClick={() => setSearchQuery("")}
             >
               <X className="h-4 w-4" />
@@ -328,14 +328,12 @@ function SearchDialog({ open, setOpen }: { open: boolean; setOpen: (open: boolea
 
         <div className="max-h-[60vh] overflow-y-auto p-2" ref={resultsRef}>
           {results.length === 0 && searchQuery && (
-            <div className="p-4 text-center text-neutral-500">No results found for "{searchQuery}"</div>
+            <div className="p-4 text-center text-gray-500">No results found for "{searchQuery}"</div>
           )}
 
           {Object.entries(groupedResults).map(([category, items]) => (
             <div key={category} className="mb-4">
-              <div className="px-3 py-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-                {category}
-              </div>
+              <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">{category}</div>
               <div className="space-y-1">
                 {items.map((item, index) => {
                   const absoluteIndex = results.findIndex((r) => r.path === item.path)
@@ -345,18 +343,16 @@ function SearchDialog({ open, setOpen }: { open: boolean; setOpen: (open: boolea
                       href={item.path}
                       className={cn(
                         "flex items-start gap-3 px-3 py-2 rounded-md text-sm",
-                        absoluteIndex === selectedIndex
-                          ? "bg-neutral-100 text-neutral-900"
-                          : "hover:bg-neutral-50 text-neutral-700",
+                        absoluteIndex === selectedIndex ? "bg-gray-100 text-black" : "hover:bg-gray-50 text-gray-700",
                       )}
                       onClick={() => setOpen(false)}
                     >
-                      <div className="flex-shrink-0 mt-1 text-neutral-500">{item.icon}</div>
+                      <div className="flex-shrink-0 mt-1 text-gray-500">{item.icon}</div>
                       <div className="flex-1 min-w-0">
                         <div className="font-medium">{item.title}</div>
-                        <div className="text-xs text-neutral-500 truncate">{item.description}</div>
+                        <div className="text-xs text-gray-500 truncate">{item.description}</div>
                       </div>
-                      <ArrowRight className="flex-shrink-0 h-4 w-4 mt-1 text-neutral-400" />
+                      <ArrowRight className="flex-shrink-0 h-4 w-4 mt-1 text-gray-400" />
                     </Link>
                   )
                 })}
@@ -365,23 +361,23 @@ function SearchDialog({ open, setOpen }: { open: boolean; setOpen: (open: boolea
           ))}
 
           {searchQuery && results.length > 0 && (
-            <div className="px-3 py-2 text-xs text-neutral-500 border-t border-neutral-200 mt-2">
+            <div className="px-3 py-2 text-xs text-gray-500 border-t border-gray-200 mt-2">
               <div className="flex items-center justify-between">
                 <span>
                   {results.length} result{results.length !== 1 ? "s" : ""}
                 </span>
                 <div className="flex gap-1">
-                  <kbd className="inline-flex h-5 items-center gap-1 rounded border border-neutral-300 bg-neutral-100 px-1.5 font-mono text-[10px] font-medium text-neutral-600">
+                  <kbd className="inline-flex h-5 items-center gap-1 rounded border border-gray-300 bg-gray-100 px-1.5 font-mono text-[10px] font-medium text-gray-600">
                     ↑
                   </kbd>
-                  <kbd className="inline-flex h-5 items-center gap-1 rounded border border-neutral-300 bg-neutral-100 px-1.5 font-mono text-[10px] font-medium text-neutral-600">
+                  <kbd className="inline-flex h-5 items-center gap-1 rounded border border-gray-300 bg-gray-100 px-1.5 font-mono text-[10px] font-medium text-gray-600">
                     ↓
                   </kbd>
-                  <span className="text-neutral-500">to navigate</span>
-                  <kbd className="inline-flex h-5 items-center gap-1 rounded border border-neutral-300 bg-neutral-100 px-1.5 font-mono text-[10px] font-medium text-neutral-600">
+                  <span className="text-gray-500">to navigate</span>
+                  <kbd className="inline-flex h-5 items-center gap-1 rounded border border-gray-300 bg-gray-100 px-1.5 font-mono text-[10px] font-medium text-gray-600">
                     ↵
                   </kbd>
-                  <span className="text-neutral-500">to select</span>
+                  <span className="text-gray-500">to select</span>
                 </div>
               </div>
             </div>

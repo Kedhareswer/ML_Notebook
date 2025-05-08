@@ -4,9 +4,8 @@ import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowLeft, ArrowRight, BookOpen, Code, BarChart } from "lucide-react"
+import { ArrowLeft, ArrowRight, BookOpen, BarChart } from "lucide-react"
 import Link from "next/link"
-import NotebookCell from "@/components/notebook-cell"
 import ModelVisualization from "@/components/model-visualization"
 
 export default function LogisticRegressionPage() {
@@ -208,7 +207,7 @@ export default function LogisticRegressionPage() {
       </div>
 
       <Tabs defaultValue="explanation" value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-        <TabsList className="grid w-full grid-cols-3 bg-neutral-100 text-neutral-900">
+        <TabsList className="grid w-full grid-cols-2 bg-neutral-100 text-neutral-900">
           <TabsTrigger value="explanation" className="flex items-center gap-2 data-[state=active]:bg-white">
             <BookOpen className="h-4 w-4" />
             <span>Explanation</span>
@@ -216,10 +215,6 @@ export default function LogisticRegressionPage() {
           <TabsTrigger value="visualization" className="flex items-center gap-2 data-[state=active]:bg-white">
             <BarChart className="h-4 w-4" />
             <span>Visualization</span>
-          </TabsTrigger>
-          <TabsTrigger value="notebook" className="flex items-center gap-2 data-[state=active]:bg-white">
-            <Code className="h-4 w-4" />
-            <span>Notebook</span>
           </TabsTrigger>
         </TabsList>
 
@@ -452,196 +447,6 @@ export default function LogisticRegressionPage() {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
-
-        <TabsContent value="notebook" className="space-y-8">
-          <div className="bg-white border border-neutral-300 rounded-lg p-6">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-neutral-900 mb-2">Logistic Regression Implementation</h2>
-              <p className="text-neutral-700">
-                This notebook demonstrates how to implement Logistic Regression using Python and scikit-learn. Execute
-                each cell to see the results.
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              <NotebookCell
-                cellId="cell0"
-                executionCount={1}
-                initialCode="import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.datasets import make_classification
-from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
-
-# Set random seed for reproducibility
-np.random.seed(42)"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">
-                  Step 1: Prepare data and train a logistic regression model
-                </p>
-                <p>Let's create a synthetic dataset and train a basic logistic regression model.</p>
-              </div>
-
-              <NotebookCell
-                cellId="cell1"
-                executionCount={2}
-                initialCode="# Generate a synthetic dataset
-X, y = make_classification(
-    n_samples=200, 
-    n_features=2,
-    n_redundant=0,
-    n_informative=2,
-    n_clusters_per_class=1,
-    class_sep=1.0,
-    random_state=42
-)
-
-# Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.25, random_state=42
-)
-
-# Standardize features
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
-
-# Train a logistic regression model
-log_reg = LogisticRegression(random_state=42)
-log_reg.fit(X_train_scaled, y_train)
-
-# Make predictions
-y_pred = log_reg.predict(X_test_scaled)
-
-# Evaluate the model
-accuracy = accuracy_score(y_test, y_pred)
-precision = precision_score(y_test, y_pred)
-recall = recall_score(y_test, y_pred)
-f1 = f1_score(y_test, y_pred)
-
-print(f'Accuracy: {accuracy:.4f}')
-print(f'Precision: {precision:.4f}')
-print(f'Recall: {recall:.4f}')
-print(f'F1 Score: {f1:.4f}')"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Step 2: Visualize the decision boundary</p>
-                <p>Let's visualize how the logistic regression model separates the two classes.</p>
-              </div>
-
-              <NotebookCell
-                cellId="cell2"
-                executionCount={3}
-                initialCode="# Function to plot decision boundary
-def plot_decision_boundary(X, y, model, scaler):
-    # Set up the figure
-    plt.figure(figsize=(10, 6))
-    
-    # Determine plot boundaries
-    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.1),
-                         np.arange(y_min, y_max, 0.1))
-    
-    # Scale the mesh grid points
-    mesh_points = np.c_[xx.ravel(), yy.ravel()]
-    mesh_points_scaled = scaler.transform(mesh_points)
-    
-    # Predict using the model
-    Z = model.predict(mesh_points_scaled)
-    Z = Z.reshape(xx.shape)
-    
-    # Plot decision boundary and points
-    plt.contourf(xx, yy, Z, alpha=0.3)
-    plt.scatter(X[:, 0], X[:, 1], c=y, edgecolors='k', marker='o')
-    
-    # Add labels and title
-    plt.xlabel('Feature 1')
-    plt.ylabel('Feature 2')
-    plt.title('Logistic Regression Decision Boundary')
-    
-    # Show the plot
-    plt.tight_layout()
-    plt.show()
-
-# Plot decision boundary
-plot_decision_boundary(X, y, log_reg, scaler)"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Step 3: Parameter tuning with GridSearchCV</p>
-                <p>Let's use grid search to find the optimal hyperparameters for our logistic regression model.</p>
-              </div>
-
-              <NotebookCell
-                cellId="cell3"
-                executionCount={4}
-                initialCode="# Define parameter grid
-param_grid = {
-    'C': [0.01, 0.1, 1.0, 10.0, 100.0],
-    'penalty': ['l1', 'l2', 'elasticnet', None],
-    'solver': ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga']
-}
-
-# Create a reduced parameter grid that's compatible
-# (not all solvers support all penalties)
-reduced_param_grid = {
-    'C': [0.01, 0.1, 1.0, 10.0, 100.0],
-    'penalty': ['l1', 'l2']
-}
-
-# Create grid search
-grid_search = GridSearchCV(
-    LogisticRegression(random_state=42, max_iter=1000),
-    reduced_param_grid,
-    cv=5,
-    scoring='accuracy',
-    verbose=0
-)
-
-# Fit grid search
-grid_search.fit(X_train_scaled, y_train)
-
-# Get best parameters and score
-best_params = grid_search.best_params_
-best_score = grid_search.best_score_
-
-# Evaluate on test set
-best_model = grid_search.best_estimator_
-test_accuracy = accuracy_score(y_test, best_model.predict(X_test_scaled))
-
-print(f'Best parameters: {best_params}')
-print(f'Best cross-validation score: {best_score:.4f}')
-print(f'Test accuracy with best parameters: {test_accuracy:.4f}')"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Try it yourself!</p>
-                <p>Modify the code above to experiment with different aspects of logistic regression:</p>
-                <ul className="list-disc list-inside mt-2">
-                  <li>Try different regularization strengths (C parameter)</li>
-                  <li>Experiment with different penalties (L1, L2)</li>
-                  <li>Implement multinomial logistic regression for multi-class problems</li>
-                  <li>Explore the effect of class imbalance on model performance</li>
-                  <li>Visualize the probability outputs instead of just the class predictions</li>
-                </ul>
-              </div>
-            </div>
-          </div>
         </TabsContent>
       </Tabs>
     </div>

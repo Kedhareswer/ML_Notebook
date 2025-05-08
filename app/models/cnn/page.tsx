@@ -2,140 +2,16 @@
 
 import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import NotebookCell from "@/components/notebook-cell"
 import CNNViz from "@/components/interactive-visualizations/cnn-viz"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
-import { InfoIcon, BookOpenIcon, CodeIcon, PlayIcon } from "lucide-react"
+import { InfoIcon, BookOpenIcon, PlayIcon } from "lucide-react"
 
 const CNNPage = () => {
   const [filterSize, setFilterSize] = useState(3)
   const [numFilters, setNumFilters] = useState(16)
   const [activationFunction, setActivationFunction] = useState("relu")
-
-  const cnnBasicCode = `import numpy as np
-import tensorflow as tf
-from tensorflow.keras import layers, models
-from tensorflow.keras.datasets import mnist
-
-# Load and preprocess the MNIST dataset
-(train_images, train_labels), (test_images, test_labels) = mnist.load_data()
-train_images = train_images.reshape((60000, 28, 28, 1)).astype('float32') / 255
-test_images = test_images.reshape((10000, 28, 28, 1)).astype('float32') / 255
-
-# Create a CNN model
-model = models.Sequential()
-model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)))
-model.add(layers.MaxPooling2D((2, 2)))
-model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-model.add(layers.MaxPooling2D((2, 2)))
-model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-model.add(layers.Flatten())
-model.add(layers.Dense(64, activation='relu'))
-model.add(layers.Dense(10, activation='softmax'))
-
-# Compile the model
-model.compile(optimizer='adam',
-              loss='sparse_categorical_crossentropy',
-              metrics=['accuracy'])
-
-# Train the model
-model.fit(train_images, train_labels, epochs=5, batch_size=64)
-
-# Evaluate the model
-test_loss, test_acc = model.evaluate(test_images, test_labels)
-print(f'Test accuracy: {test_acc}')`
-
-  const cnnAdvancedCode = `import tensorflow as tf
-from tensorflow.keras import layers, models, applications
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-
-# Set up data generators with augmentation
-train_datagen = ImageDataGenerator(
-    rescale=1./255,
-    rotation_range=20,
-    width_shift_range=0.2,
-    height_shift_range=0.2,
-    shear_range=0.2,
-    zoom_range=0.2,
-    horizontal_flip=True,
-    fill_mode='nearest'
-)
-
-test_datagen = ImageDataGenerator(rescale=1./255)
-
-# Load data from directories
-train_generator = train_datagen.flow_from_directory(
-    'train_dir',
-    target_size=(224, 224),
-    batch_size=32,
-    class_mode='categorical'
-)
-
-validation_generator = test_datagen.flow_from_directory(
-    'validation_dir',
-    target_size=(224, 224),
-    batch_size=32,
-    class_mode='categorical'
-)
-
-# Create a model with transfer learning
-base_model = applications.ResNet50(
-    weights='imagenet',
-    include_top=False,
-    input_shape=(224, 224, 3)
-)
-
-# Freeze the base model
-base_model.trainable = False
-
-# Add custom layers on top
-model = models.Sequential([
-    base_model,
-    layers.GlobalAveragePooling2D(),
-    layers.Dense(1024, activation='relu'),
-    layers.Dropout(0.5),
-    layers.Dense(10, activation='softmax')
-])
-
-# Compile the model
-model.compile(
-    optimizer=tf.keras.optimizers.Adam(learning_rate=0.0001),
-    loss='categorical_crossentropy',
-    metrics=['accuracy']
-)
-
-# Train the model
-history = model.fit(
-    train_generator,
-    steps_per_epoch=train_generator.samples // 32,
-    epochs=10,
-    validation_data=validation_generator,
-    validation_steps=validation_generator.samples // 32
-)
-
-# Fine-tune the model
-base_model.trainable = True
-# Freeze early layers
-for layer in base_model.layers[:100]:
-    layer.trainable = False
-
-# Recompile with lower learning rate
-model.compile(
-    optimizer=tf.keras.optimizers.Adam(learning_rate=0.00001),
-    loss='categorical_crossentropy',
-    metrics=['accuracy']
-)
-
-# Continue training
-history_fine = model.fit(
-    train_generator,
-    steps_per_epoch=train_generator.samples // 32,
-    epochs=5,
-    validation_data=validation_generator,
-    validation_steps=validation_generator.samples // 32
-)`
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -162,10 +38,6 @@ history_fine = model.fit(
           <TabsTrigger value="theory">
             <BookOpenIcon className="h-4 w-4 mr-2" />
             Theory
-          </TabsTrigger>
-          <TabsTrigger value="code">
-            <CodeIcon className="h-4 w-4 mr-2" />
-            Code Examples
           </TabsTrigger>
         </TabsList>
 
@@ -482,27 +354,6 @@ history_fine = model.fit(
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
-
-        <TabsContent value="code">
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-2xl font-bold mb-4">Basic CNN Implementation</h2>
-              <p className="mb-4">
-                This example shows how to build a simple CNN for image classification using TensorFlow and Keras.
-              </p>
-              <NotebookCell initialCode={cnnBasicCode} language="python" />
-            </div>
-
-            <div>
-              <h2 className="text-2xl font-bold mb-4">Advanced CNN with Transfer Learning</h2>
-              <p className="mb-4">
-                This example demonstrates how to use transfer learning with a pre-trained ResNet50 model for image
-                classification.
-              </p>
-              <NotebookCell initialCode={cnnAdvancedCode} language="python" />
-            </div>
-          </div>
         </TabsContent>
       </Tabs>
     </div>

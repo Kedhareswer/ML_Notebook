@@ -186,7 +186,7 @@ const PCAViz: React.FC = () => {
 
     // Draw data points
     if (activeTab === "visualization") {
-      ctx.fillStyle = "rgba(0, 0, 255, 0.5)"
+      ctx.fillStyle = "rgba(0, 0, 0, 0.5)"
       data.forEach((point) => {
         ctx.beginPath()
         ctx.arc(centerX + point.x * scale, centerY - point.y * scale, 4, 0, Math.PI * 2)
@@ -233,9 +233,9 @@ const PCAViz: React.FC = () => {
       }
 
       // Draw eigenvectors
-      drawEigenvector(pca.eigenvectors[0], pca.eigenvalues[0], "rgba(255, 0, 0, 0.8)", "PC1")
+      drawEigenvector(pca.eigenvectors[0], pca.eigenvalues[0], "rgba(50, 50, 50, 0.8)", "PC1")
       if (components > 1) {
-        drawEigenvector(pca.eigenvectors[1], pca.eigenvalues[1], "rgba(0, 128, 0, 0.8)", "PC2")
+        drawEigenvector(pca.eigenvectors[1], pca.eigenvalues[1], "rgba(110, 110, 110, 0.8)", "PC2")
       }
     } else if (activeTab === "projection") {
       // Draw original data
@@ -247,7 +247,7 @@ const PCAViz: React.FC = () => {
       })
 
       // Draw projected data
-      ctx.fillStyle = "rgba(255, 0, 0, 0.7)"
+      ctx.fillStyle = "rgba(120, 120, 120, 0.7)"
 
       // Project onto first principal component only
       const pc1 = pca.eigenvectors[0]

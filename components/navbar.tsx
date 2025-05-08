@@ -34,11 +34,11 @@ export default function Navbar() {
   ]
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-neutral-300 bg-white">
+    <header className="sticky top-0 z-50 w-full border-b border-gray-300 bg-white">
       <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
-          <BookOpen className="h-6 w-6 text-neutral-900" />
-          <span className="font-bold text-xl text-neutral-900">ML Notebook</span>
+          <BookOpen className="h-6 w-6 text-black" />
+          <span className="font-bold text-xl text-black">ML Notebook</span>
         </Link>
 
         {/* Desktop navigation */}
@@ -46,7 +46,7 @@ export default function Navbar() {
           {routes.map((route) =>
             route.dropdown ? (
               <DropdownMenu key={route.path}>
-                <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium transition-colors hover:text-neutral-900">
+                <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium transition-colors hover:text-black">
                   {route.name}
                   <ChevronDown className="h-4 w-4" />
                 </DropdownMenuTrigger>
@@ -55,10 +55,7 @@ export default function Navbar() {
                     <DropdownMenuItem key={item.path} asChild>
                       <Link
                         href={item.path}
-                        className={cn(
-                          "w-full",
-                          pathname === item.path ? "font-medium text-neutral-900" : "text-neutral-600",
-                        )}
+                        className={cn("w-full", pathname === item.path ? "font-medium text-black" : "text-gray-600")}
                       >
                         {item.name}
                       </Link>
@@ -71,10 +68,8 @@ export default function Navbar() {
                 key={route.path}
                 href={route.path}
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-neutral-900",
-                  pathname === route.path
-                    ? "text-neutral-900 underline decoration-2 underline-offset-4"
-                    : "text-neutral-600",
+                  "text-sm font-medium transition-colors hover:text-black",
+                  pathname === route.path ? "text-black underline decoration-2 underline-offset-4" : "text-gray-600",
                 )}
               >
                 {route.name}
@@ -82,7 +77,7 @@ export default function Navbar() {
             ),
           )}
           <SearchButton />
-          <Button asChild variant="notebook">
+          <Button asChild variant="default" className="bg-black text-white hover:bg-gray-800">
             <Link href="/models/linear-regression">Start Learning</Link>
           </Button>
         </nav>
@@ -98,20 +93,20 @@ export default function Navbar() {
 
       {/* Mobile navigation */}
       {isMenuOpen && (
-        <div className="md:hidden border-b border-neutral-300">
+        <div className="md:hidden border-b border-gray-300">
           <div className="container py-4 space-y-4">
             {routes.map((route) =>
               route.dropdown ? (
                 <div key={route.path} className="space-y-2">
-                  <div className="font-medium text-neutral-900">{route.name}</div>
-                  <div className="pl-4 space-y-2 border-l-2 border-neutral-200">
+                  <div className="font-medium text-black">{route.name}</div>
+                  <div className="pl-4 space-y-2 border-l-2 border-gray-200">
                     {route.items?.map((item) => (
                       <Link
                         key={item.path}
                         href={item.path}
                         className={cn(
-                          "block py-1 text-sm transition-colors hover:text-neutral-900",
-                          pathname === item.path ? "text-neutral-900 font-medium" : "text-neutral-600",
+                          "block py-1 text-sm transition-colors hover:text-black",
+                          pathname === item.path ? "text-black font-medium" : "text-gray-600",
                         )}
                         onClick={() => setIsMenuOpen(false)}
                       >
@@ -125,10 +120,8 @@ export default function Navbar() {
                   key={route.path}
                   href={route.path}
                   className={cn(
-                    "block py-2 text-sm font-medium transition-colors hover:text-neutral-900",
-                    pathname === route.path
-                      ? "text-neutral-900 underline decoration-2 underline-offset-4"
-                      : "text-neutral-600",
+                    "block py-2 text-sm font-medium transition-colors hover:text-black",
+                    pathname === route.path ? "text-black underline decoration-2 underline-offset-4" : "text-gray-600",
                   )}
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -136,7 +129,7 @@ export default function Navbar() {
                 </Link>
               ),
             )}
-            <Button asChild className="w-full" variant="notebook">
+            <Button asChild className="w-full bg-black text-white hover:bg-gray-800" variant="default">
               <Link href="/models/linear-regression" onClick={() => setIsMenuOpen(false)}>
                 Start Learning
               </Link>

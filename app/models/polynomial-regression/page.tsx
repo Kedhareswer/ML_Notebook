@@ -22,7 +22,7 @@ export default function PolynomialRegressionPage() {
             <BarChart className="h-4 w-4" /> Interactive Demo
           </TabsTrigger>
           <TabsTrigger value="code" className="flex items-center gap-2">
-            <Code className="h-4 w-4" /> Code Implementation
+            <Code className="h-4 w-4" /> Implementation
           </TabsTrigger>
         </TabsList>
 
@@ -221,7 +221,7 @@ export default function PolynomialRegressionPage() {
 
         <TabsContent value="code">
           <section>
-            <h2 className="text-2xl font-semibold text-neutral-800 mb-4">Polynomial Regression Implementation</h2>
+            <h2 className="text-2xl font-semibold text-neutral-800 mb-4">Polynomial Regression in Practice</h2>
             <p className="text-neutral-700 mb-6">
               Below is a comprehensive implementation of polynomial regression using scikit-learn. The example
               demonstrates how to create polynomial features, fit a model, and evaluate its performance with different
@@ -455,7 +455,7 @@ plt.show()`}
             <ChevronLeft className="mr-2 h-4 w-4" /> Linear Regression
           </Link>
         </Button>
-        <Button asChild variant="outline">
+        <Button asChild variant="default">
           <Link href="/models/regularized-regression">
             Ridge & Lasso Regression <ChevronRight className="ml-2 h-4 w-4" />
           </Link>

@@ -1,403 +1,225 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import NotebookCell from "@/components/notebook-cell"
-import ModelVisualization from "@/components/model-visualization"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { ArrowLeft } from "lucide-react"
+import KNNVisualization from "@/components/knn-visualization"
 
 export default function KNNPage() {
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="mb-12">
-        <h1 className="text-3xl font-bold tracking-tight text-neutral-900 mb-4">K-Nearest Neighbors (KNN)</h1>
-        <p className="text-neutral-700 max-w-3xl">
-          K-Nearest Neighbors is a simple, versatile, and non-parametric supervised learning algorithm used for both
-          classification and regression tasks. It makes predictions based on the majority vote (for classification) or
-          average value (for regression) of the k nearest data points.
-        </p>
+    <main className="flex min-h-screen flex-col p-4 md:p-24">
+      <div className="mb-8">
+        <Button variant="outline" asChild>
+          <Link href="/models">
+            <ArrowLeft className="mr-2 h-4 w-4" /> Back to Models
+          </Link>
+        </Button>
       </div>
 
-      <Tabs defaultValue="overview" className="mb-12">
-        <TabsList className="mb-8">
+      <h1 className="text-4xl font-bold mb-4">K-Nearest Neighbors (KNN)</h1>
+      <p className="text-xl mb-8">A simple, instance-based learning algorithm for classification and regression</p>
+
+      <Tabs defaultValue="overview">
+        <TabsList className="mb-4">
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="visualization">Interactive Model</TabsTrigger>
-          <TabsTrigger value="code">Code Notebook</TabsTrigger>
+          <TabsTrigger value="interactive">Interactive Demo</TabsTrigger>
+          <TabsTrigger value="math">Mathematical Foundation</TabsTrigger>
+          <TabsTrigger value="applications">Applications</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>How KNN Works</CardTitle>
-                <CardDescription>Understanding the algorithm</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p>
-                  KNN is based on the principle that similar data points exist in close proximity. The algorithm works
-                  as follows:
-                </p>
-                <ol className="list-decimal list-inside space-y-2">
-                  <li>Store all the training data points and their labels</li>
-                  <li>For a new data point, calculate the distance to all training points</li>
-                  <li>Select the K nearest neighbors (closest points)</li>
-                  <li>
-                    For classification: Take a majority vote of the K neighbors&apos; labels
-                    <br />
-                    For regression: Calculate the average of the K neighbors&apos; values
-                  </li>
-                  <li>Assign the resulting class or value to the new data point</li>
-                </ol>
-              </CardContent>
-            </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>What is K-Nearest Neighbors?</CardTitle>
+              <CardDescription>Understanding the fundamentals of KNN</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4">
+                K-Nearest Neighbors (KNN) is one of the simplest machine learning algorithms used for both
+                classification and regression. It belongs to the family of instance-based, non-parametric learning
+                algorithms.
+              </p>
+              <p className="mb-4">
+                The core idea behind KNN is that similar data points tend to have similar outputs. For a new data point,
+                the algorithm finds the K closest data points (neighbors) in the training set and uses their values to
+                predict the output for the new point.
+              </p>
+              <h3 className="text-xl font-semibold mt-6 mb-2">Key Characteristics:</h3>
+              <ul className="list-disc pl-5 space-y-2">
+                <li>
+                  <strong>Non-parametric:</strong> KNN doesn't make assumptions about the underlying data distribution.
+                </li>
+                <li>
+                  <strong>Lazy learning:</strong> KNN doesn't build a model during training; it simply stores the
+                  training data.
+                </li>
+                <li>
+                  <strong>Instance-based:</strong> Predictions are made based on the similarity between instances.
+                </li>
+                <li>
+                  <strong>Versatile:</strong> Can be used for both classification and regression tasks.
+                </li>
+              </ul>
+              <h3 className="text-xl font-semibold mt-6 mb-2">How It Works:</h3>
+              <ol className="list-decimal pl-5 space-y-2">
+                <li>Calculate the distance between the new point and all points in the training data.</li>
+                <li>Select the K nearest points based on the calculated distances.</li>
+                <li>For classification: Assign the most common class among the K neighbors.</li>
+                <li>For regression: Calculate the average (or weighted average) of the K neighbors' values.</li>
+              </ol>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Key Characteristics</CardTitle>
-                <CardDescription>Strengths and limitations</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="mb-4">
-                  <h3 className="font-medium text-neutral-900 mb-2">Strengths</h3>
-                  <ul className="list-disc list-inside space-y-1">
+        <TabsContent value="interactive">
+          <Card>
+            <CardHeader>
+              <CardTitle>Interactive KNN Visualization</CardTitle>
+              <CardDescription>Experiment with different parameters to see how KNN works</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <KNNVisualization />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="math">
+          <Card>
+            <CardHeader>
+              <CardTitle>Mathematical Foundation</CardTitle>
+              <CardDescription>The equations and principles behind KNN</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <h3 className="text-xl font-semibold mb-4">Distance Metrics</h3>
+              <p className="mb-4">
+                KNN relies on distance metrics to determine the similarity between data points. The most common distance
+                metrics include:
+              </p>
+
+              <h4 className="text-lg font-medium mt-4 mb-2">Euclidean Distance</h4>
+              <p className="mb-2">The straight-line distance between two points in Euclidean space:</p>
+              <div className="bg-gray-100 p-4 rounded-md mb-4">
+                <p>d(x, y) = √(Σ(xᵢ - yᵢ)²)</p>
+              </div>
+
+              <h4 className="text-lg font-medium mt-4 mb-2">Manhattan Distance</h4>
+              <p className="mb-2">The sum of absolute differences between coordinates:</p>
+              <div className="bg-gray-100 p-4 rounded-md mb-4">
+                <p>d(x, y) = Σ|xᵢ - yᵢ|</p>
+              </div>
+
+              <h4 className="text-lg font-medium mt-4 mb-2">Minkowski Distance</h4>
+              <p className="mb-2">A generalization of Euclidean and Manhattan distances:</p>
+              <div className="bg-gray-100 p-4 rounded-md mb-4">
+                <p>d(x, y) = (Σ|xᵢ - yᵢ|ᵖ)^(1/p)</p>
+                <p>where p = 1 gives Manhattan distance and p = 2 gives Euclidean distance</p>
+              </div>
+
+              <h3 className="text-xl font-semibold mt-6 mb-4">Classification Decision Rule</h3>
+              <p className="mb-2">For classification, KNN assigns the class based on majority voting:</p>
+              <div className="bg-gray-100 p-4 rounded-md mb-4">
+                <p>ŷ = argmax(Σ I(y_i = c))</p>
+                <p>where I is the indicator function and the sum is over the K nearest neighbors</p>
+              </div>
+
+              <h3 className="text-xl font-semibold mt-6 mb-4">Regression Prediction</h3>
+              <p className="mb-2">For regression, KNN calculates the average of the K nearest neighbors:</p>
+              <div className="bg-gray-100 p-4 rounded-md mb-4">
+                <p>ŷ = (1/K) Σ y_i</p>
+                <p>where the sum is over the K nearest neighbors</p>
+              </div>
+
+              <h3 className="text-xl font-semibold mt-6 mb-4">Weighted KNN</h3>
+              <p className="mb-2">In weighted KNN, closer neighbors have more influence on the prediction:</p>
+              <div className="bg-gray-100 p-4 rounded-md mb-4">
+                <p>ŷ = Σ(w_i * y_i) / Σw_i</p>
+                <p>where w_i = 1/d(x, x_i)² for distance-weighted KNN</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="applications">
+          <Card>
+            <CardHeader>
+              <CardTitle>Real-World Applications</CardTitle>
+              <CardDescription>How KNN is used in practice</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <h3 className="text-xl font-semibold mb-4">Common Applications of KNN</h3>
+
+              <div className="space-y-6">
+                <div>
+                  <h4 className="text-lg font-medium mb-2">Recommendation Systems</h4>
+                  <p>
+                    KNN is used in collaborative filtering to recommend products, movies, or music based on the
+                    preferences of users with similar tastes. For example, if users who liked similar movies to you also
+                    enjoyed a movie you haven't seen, that movie might be recommended to you.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="text-lg font-medium mb-2">Image Recognition</h4>
+                  <p>
+                    KNN can be used for simple image classification tasks, where images are represented as feature
+                    vectors and classified based on their similarity to labeled training images.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="text-lg font-medium mb-2">Medical Diagnosis</h4>
+                  <p>
+                    KNN can help classify patients based on their symptoms and medical history, aiding in diagnosis by
+                    comparing new patients to similar cases with known diagnoses.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="text-lg font-medium mb-2">Credit Scoring</h4>
+                  <p>
+                    Financial institutions use KNN to assess credit risk by comparing new applicants to similar
+                    customers with known repayment histories.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="text-lg font-medium mb-2">Anomaly Detection</h4>
+                  <p>
+                    KNN can identify outliers or anomalies by finding data points that are far from their nearest
+                    neighbors, which is useful in fraud detection and network security.
+                  </p>
+                </div>
+              </div>
+
+              <h3 className="text-xl font-semibold mt-8 mb-4">Strengths and Limitations</h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="text-lg font-medium mb-2">Strengths</h4>
+                  <ul className="list-disc pl-5 space-y-2">
                     <li>Simple to understand and implement</li>
                     <li>No training phase (lazy learning)</li>
                     <li>Naturally handles multi-class problems</li>
                     <li>Can be effective for non-linear data</li>
-                    <li>Makes no assumptions about the underlying data distribution</li>
+                    <li>Adaptable to new training data</li>
                   </ul>
                 </div>
+
                 <div>
-                  <h3 className="font-medium text-neutral-900 mb-2">Limitations</h3>
-                  <ul className="list-disc list-inside space-y-1">
+                  <h4 className="text-lg font-medium mb-2">Limitations</h4>
+                  <ul className="list-disc pl-5 space-y-2">
                     <li>Computationally expensive for large datasets</li>
-                    <li>Sensitive to irrelevant features and the scale of the data</li>
+                    <li>Sensitive to irrelevant features</li>
                     <li>Requires feature scaling</li>
-                    <li>The optimal value of K needs to be determined</li>
-                    <li>Performance degrades in high-dimensional spaces (curse of dimensionality)</li>
+                    <li>Struggles with high-dimensional data (curse of dimensionality)</li>
+                    <li>Optimal K value selection can be challenging</li>
                   </ul>
                 </div>
-              </CardContent>
-            </Card>
-
-            <Card className="md:col-span-2">
-              <CardHeader>
-                <CardTitle>Distance Metrics</CardTitle>
-                <CardDescription>Different ways to measure distance between points</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="mb-4">
-                  The choice of distance metric is crucial for KNN and depends on the type of data. Common distance
-                  metrics include:
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="bg-neutral-50 p-4 rounded-lg">
-                    <h3 className="font-medium text-neutral-900 mb-2">Euclidean Distance</h3>
-                    <p className="text-sm text-neutral-700 mb-2">
-                      The straight-line distance between two points in Euclidean space.
-                    </p>
-                    <div className="bg-white p-3 rounded border border-neutral-200">
-                      <p className="font-mono text-sm">
-                        d(p,q) = √(Σ(q<sub>i</sub> - p<sub>i</sub>)²)
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="bg-neutral-50 p-4 rounded-lg">
-                    <h3 className="font-medium text-neutral-900 mb-2">Manhattan Distance</h3>
-                    <p className="text-sm text-neutral-700 mb-2">
-                      The sum of the absolute differences of their Cartesian coordinates.
-                    </p>
-                    <div className="bg-white p-3 rounded border border-neutral-200">
-                      <p className="font-mono text-sm">
-                        d(p,q) = Σ|p<sub>i</sub> - q<sub>i</sub>|
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="bg-neutral-50 p-4 rounded-lg">
-                    <h3 className="font-medium text-neutral-900 mb-2">Minkowski Distance</h3>
-                    <p className="text-sm text-neutral-700 mb-2">
-                      A generalization of Euclidean and Manhattan distance.
-                    </p>
-                    <div className="bg-white p-3 rounded border border-neutral-200">
-                      <p className="font-mono text-sm">
-                        d(p,q) = (Σ|p<sub>i</sub> - q<sub>i</sub>|<sup>r</sup>)<sup>1/r</sup>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="visualization">
-          <Card>
-            <CardHeader>
-              <CardTitle>Interactive KNN Model</CardTitle>
-              <CardDescription>Adjust parameters to see how they affect the KNN decision boundaries</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ModelVisualization
-                title="K-Nearest Neighbors Visualization"
-                description="This visualization shows how KNN classifies points in a 2D space. You can adjust the number of neighbors (k) and the noise in the data to see how the decision boundaries change."
-                parameters={[
-                  {
-                    name: "k",
-                    min: 1,
-                    max: 20,
-                    step: 1,
-                    defaultValue: 5,
-                    label: "Number of Neighbors (k)",
-                  },
-                  {
-                    name: "noise",
-                    min: 0,
-                    max: 1,
-                    step: 0.05,
-                    defaultValue: 0.3,
-                    label: "Data Noise",
-                  },
-                ]}
-                renderVisualization={({ k, noise }) => (
-                  <div className="w-full h-[400px] bg-white rounded-lg border border-neutral-200 flex items-center justify-center">
-                    <div className="text-center">
-                      <p className="text-neutral-500">
-                        KNN visualization with k={k} and noise={noise.toFixed(2)}
-                      </p>
-                      <p className="text-sm text-neutral-400 mt-2">(Interactive visualization would render here)</p>
-                    </div>
-                  </div>
-                )}
-              />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="code">
-          <Card>
-            <CardHeader>
-              <CardTitle>KNN Implementation</CardTitle>
-              <CardDescription>Explore a Python implementation of KNN using scikit-learn</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <NotebookCell
-                cellType="markdown"
-                content={`# K-Nearest Neighbors Implementation
-
-In this notebook, we'll implement KNN for a classification task using scikit-learn and visualize the decision boundaries.`}
-              />
-
-              <NotebookCell
-                cellType="code"
-                content={`import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.datasets import make_classification
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-import seaborn as sns
-
-# Set the style for our plots
-sns.set_style('whitegrid')
-np.random.seed(42)`}
-              />
-
-              <NotebookCell
-                cellType="markdown"
-                content={`## Data Preparation
-
-First, let's generate a synthetic dataset for classification.`}
-              />
-
-              <NotebookCell
-                cellType="code"
-                content={`# Generate a synthetic dataset
-X, y = make_classification(
-    n_samples=300,
-    n_features=2,  # 2 features for easy visualization
-    n_informative=2,
-    n_redundant=0,
-    n_clusters_per_class=1,
-    class_sep=1.0,
-    random_state=42
-)
-
-# Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.3, random_state=42
-)
-
-# Plot the data
-plt.figure(figsize=(10, 6))
-plt.scatter(X_train[:, 0], X_train[:, 1], c=y_train, cmap='viridis', 
-            edgecolors='k', s=50, alpha=0.8)
-plt.title('Training Data')
-plt.xlabel('Feature 1')
-plt.ylabel('Feature 2')
-plt.colorbar(label='Class')
-plt.show()`}
-              />
-
-              <NotebookCell
-                cellType="markdown"
-                content={`## Training the KNN Model
-
-Now, let's train a KNN classifier with k=5 and visualize the decision boundaries.`}
-              />
-
-              <NotebookCell
-                cellType="code"
-                content={`# Create and train the KNN classifier
-k = 5
-knn = KNeighborsClassifier(n_neighbors=k)
-knn.fit(X_train, y_train)
-
-# Make predictions on the test set
-y_pred = knn.predict(X_test)
-
-# Calculate accuracy
-accuracy = accuracy_score(y_test, y_pred)
-print(f"Accuracy with k={k}: {accuracy:.4f}")
-
-# Function to plot decision boundaries
-def plot_decision_boundaries(X, y, model, title):
-    h = 0.02  # Step size in the mesh
-    
-    # Create a mesh grid
-    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
-                         np.arange(y_min, y_max, h))
-    
-    # Predict class for each point in the mesh
-    Z = model.predict(np.c_[xx.ravel(), yy.ravel()])
-    Z = Z.reshape(xx.shape)
-    
-    # Plot the decision boundary
-    plt.figure(figsize=(10, 6))
-    plt.contourf(xx, yy, Z, alpha=0.3, cmap='viridis')
-    
-    # Plot the training points
-    plt.scatter(X[:, 0], X[:, 1], c=y, cmap='viridis', 
-                edgecolors='k', s=50, alpha=0.8)
-    
-    plt.title(title)
-    plt.xlabel('Feature 1')
-    plt.ylabel('Feature 2')
-    plt.tight_layout()
-    plt.show()
-
-# Plot the decision boundaries
-plot_decision_boundaries(X_train, y_train, knn, f'KNN Decision Boundaries (k={k})')`}
-              />
-
-              <NotebookCell
-                cellType="markdown"
-                content={`## Finding the Optimal k Value
-
-Let's try different values of k and see how they affect the model's performance.`}
-              />
-
-              <NotebookCell
-                cellType="code"
-                content={`# Test different k values
-k_values = list(range(1, 31, 2))  # Odd numbers from 1 to 30
-train_accuracies = []
-test_accuracies = []
-
-for k in k_values:
-    # Create and train the model
-    knn = KNeighborsClassifier(n_neighbors=k)
-    knn.fit(X_train, y_train)
-    
-    # Calculate training accuracy
-    train_pred = knn.predict(X_train)
-    train_acc = accuracy_score(y_train, train_pred)
-    train_accuracies.append(train_acc)
-    
-    # Calculate test accuracy
-    test_pred = knn.predict(X_test)
-    test_acc = accuracy_score(y_test, test_pred)
-    test_accuracies.append(test_acc)
-
-# Plot the results
-plt.figure(figsize=(12, 6))
-plt.plot(k_values, train_accuracies, 'o-', label='Training Accuracy')
-plt.plot(k_values, test_accuracies, 's-', label='Test Accuracy')
-plt.xlabel('Number of Neighbors (k)')
-plt.ylabel('Accuracy')
-plt.title('KNN Performance vs. k Value')
-plt.legend()
-plt.grid(True)
-plt.show()
-
-# Find the optimal k value
-optimal_k = k_values[np.argmax(test_accuracies)]
-print(f"Optimal k value: {optimal_k}")
-print(f"Best test accuracy: {max(test_accuracies):.4f}")
-
-# Train the model with the optimal k value
-optimal_knn = KNeighborsClassifier(n_neighbors=optimal_k)
-optimal_knn.fit(X_train, y_train)
-
-# Plot the decision boundaries with the optimal k
-plot_decision_boundaries(X_train, y_train, optimal_knn, 
-                        f'KNN Decision Boundaries (Optimal k={optimal_k})')`}
-              />
-
-              <NotebookCell
-                cellType="markdown"
-                content={`## Effect of Distance Metrics
-
-Let's compare different distance metrics in KNN.`}
-              />
-
-              <NotebookCell
-                cellType="code"
-                content={`# Compare different distance metrics
-metrics = ['euclidean', 'manhattan', 'minkowski']
-plt.figure(figsize=(15, 5))
-
-for i, metric in enumerate(metrics, 1):
-    # Create and train the model
-    knn = KNeighborsClassifier(n_neighbors=optimal_k, metric=metric)
-    knn.fit(X_train, y_train)
-    
-    # Calculate accuracy
-    y_pred = knn.predict(X_test)
-    accuracy = accuracy_score(y_test, y_pred)
-    
-    # Plot the decision boundaries
-    plt.subplot(1, 3, i)
-    
-    # Create a mesh grid
-    h = 0.02
-    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
-                         np.arange(y_min, y_max, h))
-    
-    # Predict class for each point in the mesh
-    Z = knn.predict(np.c_[xx.ravel(), yy.ravel()])
-    Z = Z.reshape(xx.shape)
-    
-    # Plot the decision boundary
-    plt.contourf(xx, yy, Z, alpha=0.3, cmap='viridis')
-    
-    # Plot the training points
-    plt.scatter(X_train[:, 0], X_train[:, 1], c=y_train, cmap='viridis', 
-                edgecolors='k', s=30, alpha=0.8)
-    
-    plt.title(f'{metric.capitalize()} (Acc: {accuracy:.4f})')
-    plt.xlabel('Feature 1')
-    plt.ylabel('Feature 2')
-
-plt.tight_layout()
-plt.show()`}
-              />
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+    </main>
   )
 }

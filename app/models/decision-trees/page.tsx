@@ -5,13 +5,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import ModelVisualization from "@/components/model-visualization"
-import { ArrowLeft, ArrowRight, BookOpen, Code, GitBranch } from "lucide-react"
+import { ArrowLeft, ArrowRight, BookOpen, GitBranch } from "lucide-react"
 import Link from "next/link"
-import NotebookCell from "@/components/notebook-cell"
 
 export default function DecisionTreesPage() {
   const [activeTab, setActiveTab] = useState("explanation")
-  const [executionCount, setExecutionCount] = useState(1)
 
   // Decision tree visualization function
   const renderDecisionTree = (
@@ -85,55 +83,6 @@ export default function DecisionTreesPage() {
     drawNode(width / 2, levelHeight, 0)
   }
 
-  const handleExecuteCode = async (code: string, cellId: string) => {
-    // Simulate code execution
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    setExecutionCount((prev) => prev + 1)
-
-    if (cellId === "cell1") {
-      return (
-        <div className="font-mono text-sm whitespace-pre-wrap">
-          Accuracy: 0.8733
-          <br />
-          <br />
-          Decision tree with 7 nodes and max depth 3<br />
-          Number of features: 2<br />
-          Number of classes: 2
-        </div>
-      )
-    } else if (cellId === "cell2") {
-      return (
-        <div>
-          <div className="font-mono text-sm mb-2">Tree visualization:</div>
-          <div className="bg-neutral-100 h-40 w-full rounded-md flex items-center justify-center">
-            <p className="text-neutral-500">Decision tree visualization</p>
-          </div>
-        </div>
-      )
-    } else if (cellId === "cell3") {
-      return (
-        <div>
-          <div className="font-mono text-sm mb-2">Decision boundaries:</div>
-          <div className="bg-neutral-100 h-40 w-full rounded-md flex items-center justify-center">
-            <p className="text-neutral-500">Decision boundaries visualization</p>
-          </div>
-        </div>
-      )
-    } else if (cellId === "cell4") {
-      return (
-        <div className="font-mono text-sm whitespace-pre-wrap">
-          Feature importances:
-          <br />
-          Feature 0: 0.7621
-          <br />
-          Feature 1: 0.2379
-        </div>
-      )
-    }
-
-    return "Executed successfully"
-  }
-
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
@@ -149,7 +98,7 @@ export default function DecisionTreesPage() {
               <ArrowLeft className="mr-2 h-4 w-4" /> Polynomial Regression
             </Link>
           </Button>
-          <Button asChild variant="notebook">
+          <Button asChild variant="default">
             <Link href="/models/random-forests">
               Next: Random Forests <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
@@ -158,7 +107,7 @@ export default function DecisionTreesPage() {
       </div>
 
       <Tabs defaultValue="explanation" value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-        <TabsList className="grid w-full grid-cols-3 bg-neutral-100 text-neutral-900">
+        <TabsList className="grid w-full grid-cols-2 bg-neutral-100 text-neutral-900">
           <TabsTrigger value="explanation" className="flex items-center gap-2 data-[state=active]:bg-white">
             <BookOpen className="h-4 w-4" />
             <span>Explanation</span>
@@ -166,10 +115,6 @@ export default function DecisionTreesPage() {
           <TabsTrigger value="visualization" className="flex items-center gap-2 data-[state=active]:bg-white">
             <GitBranch className="h-4 w-4" />
             <span>Visualization</span>
-          </TabsTrigger>
-          <TabsTrigger value="notebook" className="flex items-center gap-2 data-[state=active]:bg-white">
-            <Code className="h-4 w-4" />
-            <span>Notebook</span>
           </TabsTrigger>
         </TabsList>
 
@@ -358,158 +303,6 @@ export default function DecisionTreesPage() {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
-
-        <TabsContent value="notebook" className="space-y-8">
-          <div className="bg-white border border-neutral-300 rounded-lg p-6">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-neutral-900 mb-2">Decision Tree Implementation</h2>
-              <p className="text-neutral-700">
-                This notebook demonstrates how to implement decision trees using Python and scikit-learn. Execute each
-                cell to see the results.
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              <NotebookCell
-                cellId="cell0"
-                executionCount={1}
-                initialCode="import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.datasets import make_classification
-from sklearn.tree import DecisionTreeClassifier, plot_tree
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-
-# Set random seed for reproducibility
-np.random.seed(42)"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Step 1: Generate and prepare data</p>
-                <p>Let's create a synthetic classification dataset and split it into training and testing sets.</p>
-              </div>
-
-              <NotebookCell
-                cellId="cell1"
-                executionCount={2}
-                initialCode="# Generate a synthetic dataset
-X, y = make_classification(
-    n_samples=1000, 
-    n_features=2,
-    n_informative=2,
-    n_redundant=0,
-    n_clusters_per_class=1,
-    random_state=42
-)
-
-# Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.3, random_state=42
-)
-
-# Create and train the decision tree classifier
-tree = DecisionTreeClassifier(
-    max_depth=3,
-    min_samples_split=10,
-    random_state=42
-)
-tree.fit(X_train, y_train)
-
-# Make predictions and evaluate
-y_pred = tree.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-print(f'Accuracy: {accuracy:.4f}')
-print()
-print(f'Decision tree with {tree.tree_.node_count} nodes and max depth {tree.tree_.max_depth}')
-print(f'Number of features: {tree.n_features_in_}')
-print(f'Number of classes: {len(tree.classes_)}')"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Step 2: Visualize the decision tree</p>
-                <p>Let's visualize the structure of our trained decision tree.</p>
-              </div>
-
-              <NotebookCell
-                cellId="cell2"
-                executionCount={3}
-                initialCode="# Visualize the decision tree
-plt.figure(figsize=(15, 10))
-plot_tree(
-    tree, 
-    filled=True, 
-    feature_names=[f'Feature {i}' for i in range(X.shape[1])],
-    class_names=['Class 0', 'Class 1']
-)
-plt.title('Decision Tree Visualization')
-plt.show()"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Step 3: Visualize the decision boundaries</p>
-                <p>Now let's see how the decision tree separates the feature space into regions.</p>
-              </div>
-
-              <NotebookCell
-                cellId="cell3"
-                executionCount={4}
-                initialCode="# Visualize the decision boundaries
-plt.figure(figsize=(10, 6))
-x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.02),
-                     np.arange(y_min, y_max, 0.02))
-
-Z = tree.predict(np.c_[xx.ravel(), yy.ravel()])
-Z = Z.reshape(xx.shape)
-
-plt.contourf(xx, yy, Z, alpha=0.3)
-plt.scatter(X[:, 0], X[:, 1], c=y, marker='o', edgecolor='k')
-plt.xlabel('Feature 0')
-plt.ylabel('Feature 1')
-plt.title('Decision Boundaries')
-plt.show()"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Step 4: Analyze feature importance</p>
-                <p>Let's examine which features are most important for the decision tree's predictions.</p>
-              </div>
-
-              <NotebookCell
-                cellId="cell4"
-                executionCount={5}
-                initialCode="# Get feature importances
-importances = tree.feature_importances_
-print('Feature importances:')
-for i, importance in enumerate(importances):
-    print(f'Feature {i}: {importance:.4f}')"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Try it yourself!</p>
-                <p>Modify the code above to experiment with different aspects of decision trees:</p>
-                <ul className="list-disc list-inside mt-2">
-                  <li>Change the max_depth parameter to see how it affects model complexity</li>
-                  <li>Try different criteria (gini or entropy) for the split quality</li>
-                  <li>Implement pruning techniques to reduce overfitting</li>
-                  <li>Use cross-validation to find optimal hyperparameters</li>
-                  <li>Try a regression tree instead of a classification tree</li>
-                </ul>
-              </div>
-            </div>
-          </div>
         </TabsContent>
       </Tabs>
     </div>

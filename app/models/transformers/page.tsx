@@ -334,7 +334,7 @@ export default function TransformersPage() {
               <ArrowLeft className="mr-2 h-4 w-4" /> Recurrent Neural Networks
             </Link>
           </Button>
-          <Button asChild variant="notebook">
+          <Button asChild variant="default">
             <Link href="/models/comparison">
               Next: Model Comparison <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
@@ -354,7 +354,7 @@ export default function TransformersPage() {
           </TabsTrigger>
           <TabsTrigger value="notebook" className="flex items-center gap-2 data-[state=active]:bg-white">
             <Code className="h-4 w-4" />
-            <span>Notebook</span>
+            <span>Implementation</span>
           </TabsTrigger>
         </TabsList>
 
@@ -968,7 +968,7 @@ export default function TransformersPage() {
         <TabsContent value="notebook" className="space-y-8">
           <div className="bg-white border border-neutral-300 rounded-lg p-6">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-neutral-900 mb-2">Transformer Implementation</h2>
+              <h2 className="text-2xl font-bold text-neutral-900 mb-2">Transformers in Practice</h2>
               <p className="text-neutral-700">
                 This notebook demonstrates how to use transformer models with the Hugging Face Transformers library.
                 Execute each cell to see the results.

@@ -53,7 +53,8 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        neutral: {
+        // Monochromatic palette
+        gray: {
           50: "#fafafa",
           100: "#f5f5f5",
           200: "#e5e5e5",
@@ -65,6 +66,8 @@ const config = {
           800: "#262626",
           900: "#171717",
         },
+        black: "#000000",
+        white: "#ffffff",
       },
       borderRadius: {
         lg: "var(--radius)",

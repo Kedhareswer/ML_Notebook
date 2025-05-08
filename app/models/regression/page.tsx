@@ -90,7 +90,7 @@ export default function RegressionModelsPage() {
                 <p className="text-neutral-700">{model.content}</p>
               </CardContent>
               <CardFooter>
-                <Button asChild variant="notebook" className="w-full sm:w-auto">
+                <Button asChild variant="default" className="w-full sm:w-auto">
                   <Link href={model.href}>
                     Explore {model.title} <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>

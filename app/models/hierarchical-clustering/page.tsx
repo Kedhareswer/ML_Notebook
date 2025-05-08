@@ -4,14 +4,13 @@ import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowRight, BookOpen, Code, GitMerge } from "lucide-react"
+import { ArrowRight, BookOpen, GitMerge } from "lucide-react"
 import Link from "next/link"
-import NotebookCell from "@/components/notebook-cell"
 import ModelVisualization from "@/components/model-visualization"
+import { ArrowLeft } from "lucide-react"
 
 export default function HierarchicalClusteringPage() {
   const [activeTab, setActiveTab] = useState("explanation")
-  const [executionCount, setExecutionCount] = useState(1)
 
   // Hierarchical Clustering visualization function
   const renderHierarchicalClustering = (
@@ -97,7 +96,7 @@ export default function HierarchicalClusteringPage() {
             for (const pi of clusters_arr[i]) {
               for (const pj of clusters_arr[j]) {
                 const dist = Math.sqrt(
-                  Math.pow(points[pi].x - points[pj].x, 2) + Math.pow(points[pi].y - points[pj].y, 2),
+                  Math.pow(points[pi].x - points[pj].x, 2) + Math.pow(points[pj].y - points[pj].y, 2),
                 )
                 clusterDist = Math.min(clusterDist, dist)
               }
@@ -108,7 +107,7 @@ export default function HierarchicalClusteringPage() {
             for (const pi of clusters_arr[i]) {
               for (const pj of clusters_arr[j]) {
                 const dist = Math.sqrt(
-                  Math.pow(points[pi].x - points[pj].x, 2) + Math.pow(points[pi].y - points[pj].y, 2),
+                  Math.pow(points[pi].x - points[pj].x, 2) + Math.pow(points[pj].y - points[pj].y, 2),
                 )
                 clusterDist = Math.max(clusterDist, dist)
               }
@@ -209,57 +208,6 @@ export default function HierarchicalClusteringPage() {
     ctx.fillText(`Clusters: ${clusters}, Linkage: ${currentLinkage}, Noise: ${noise}`, margin, height - 10)
   }
 
-  const handleExecuteCode = async (code: string, cellId: string) => {
-    // Simulate code execution
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    setExecutionCount((prev) => prev + 1)
-
-    if (cellId === "cell1") {
-      return (
-        <div className="font-mono text-sm whitespace-pre-wrap">
-          Single linkage cophenetic correlation: 0.7826
-          <br />
-          Complete linkage cophenetic correlation: 0.8142
-          <br />
-          Average linkage cophenetic correlation: 0.8315
-          <br />
-          Ward linkage cophenetic correlation: 0.7603
-        </div>
-      )
-    } else if (cellId === "cell2") {
-      return (
-        <div>
-          <div className="font-mono text-sm mb-2">Hierarchical Clustering Dendrogram:</div>
-          <div className="bg-neutral-100 h-40 w-full rounded-md flex items-center justify-center">
-            <p className="text-neutral-500">Hierarchical clustering dendrogram</p>
-          </div>
-        </div>
-      )
-    } else if (cellId === "cell3") {
-      return (
-        <div className="font-mono text-sm whitespace-pre-wrap">
-          Ideal number of clusters: 4
-          <br />
-          Silhouette scores:
-          <br />
-          n_clusters=2: 0.5813
-          <br />
-          n_clusters=3: 0.6247
-          <br />
-          n_clusters=4: 0.6982
-          <br />
-          n_clusters=5: 0.6421
-          <br />
-          n_clusters=6: 0.5876
-          <br />
-          n_clusters=7: 0.5539
-        </div>
-      )
-    }
-
-    return "Executed successfully"
-  }
-
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
@@ -271,9 +219,11 @@ export default function HierarchicalClusteringPage() {
         </div>
         <div className="flex gap-2">
           <Button variant="outline" asChild>
-            <Link href="/models">All Models</Link>
+            <Link href="/models/kmeans">
+              <ArrowLeft className="mr-2 h-4 w-4" /> Previous: K-Means Clustering
+            </Link>
           </Button>
-          <Button asChild variant="notebook">
+          <Button asChild variant="default">
             <Link href="/models/pca">
               Next: Principal Component Analysis <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
@@ -282,7 +232,7 @@ export default function HierarchicalClusteringPage() {
       </div>
 
       <Tabs defaultValue="explanation" value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-        <TabsList className="grid w-full grid-cols-3 bg-neutral-100 text-neutral-900">
+        <TabsList className="grid w-full grid-cols-2 bg-neutral-100 text-neutral-900">
           <TabsTrigger value="explanation" className="flex items-center gap-2 data-[state=active]:bg-white">
             <BookOpen className="h-4 w-4" />
             <span>Explanation</span>
@@ -290,10 +240,6 @@ export default function HierarchicalClusteringPage() {
           <TabsTrigger value="visualization" className="flex items-center gap-2 data-[state=active]:bg-white">
             <GitMerge className="h-4 w-4" />
             <span>Visualization</span>
-          </TabsTrigger>
-          <TabsTrigger value="notebook" className="flex items-center gap-2 data-[state=active]:bg-white">
-            <Code className="h-4 w-4" />
-            <span>Notebook</span>
           </TabsTrigger>
         </TabsList>
 
@@ -521,176 +467,6 @@ export default function HierarchicalClusteringPage() {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
-
-        <TabsContent value="notebook" className="space-y-8">
-          <div className="bg-white border border-neutral-300 rounded-lg p-6">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-neutral-900 mb-2">Hierarchical Clustering Implementation</h2>
-              <p className="text-neutral-700">
-                This notebook demonstrates how to implement hierarchical clustering using Python and scipy. Execute each
-                cell to see the results.
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              <NotebookCell
-                cellId="cell0"
-                executionCount={1}
-                initialCode="import numpy as np
-import matplotlib.pyplot as plt
-from scipy.cluster.hierarchy import dendrogram, linkage, fcluster, cophenet
-from scipy.spatial.distance import pdist
-from sklearn.datasets import make_blobs
-from sklearn.cluster import AgglomerativeClustering
-from sklearn.metrics import silhouette_score
-import matplotlib.cm as cm
-
-# Set random seed for reproducibility
-np.random.seed(42)"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Step 1: Compare different linkage methods</p>
-                <p>
-                  Let's generate data and compare different linkage methods using the cophenetic correlation
-                  coefficient, which measures how faithfully the hierarchical clustering preserves the pairwise
-                  distances.
-                </p>
-              </div>
-
-              <NotebookCell
-                cellId="cell1"
-                executionCount={2}
-                initialCode="# Generate synthetic data
-X, y = make_blobs(n_samples=150, centers=4, random_state=42, cluster_std=0.60)
-
-# Compute original pairwise distances
-original_distances = pdist(X)
-
-# Compare different linkage methods
-linkage_methods = ['single', 'complete', 'average', 'ward']
-cophenetic_corrs = {}
-
-for method in linkage_methods:
-    # Compute the linkage matrix
-    Z = linkage(X, method=method)
-    
-    # Compute cophenetic distances and correlation
-    c, coph_dists = cophenet(Z, original_distances)
-    cophenetic_corrs[method] = c
-    
-    print(f'{method.capitalize()} linkage cophenetic correlation: {c:.4f}')"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Step 2: Visualize the dendrogram</p>
-                <p>Let's create and visualize a dendrogram using the best linkage method from above.</p>
-              </div>
-
-              <NotebookCell
-                cellId="cell2"
-                executionCount={3}
-                initialCode="# Find the best linkage method
-best_method = max(cophenetic_corrs, key=cophenetic_corrs.get)
-print(f'Best linkage method: {best_method}')
-
-# Compute linkage matrix with the best method
-Z = linkage(X, method=best_method)
-
-# Plot the dendrogram
-plt.figure(figsize=(12, 6))
-plt.title(f'Hierarchical Clustering Dendrogram ({best_method.capitalize()} Linkage)')
-plt.xlabel('Sample index')
-plt.ylabel('Distance')
-
-# Add horizontal line at a height where we have 4 clusters
-cut_height = np.median(Z[-4:, 2])  # Approximate height for 4 clusters
-
-dendrogram(
-    Z,
-    truncate_mode='lastp',  # Show only the last p merged clusters
-    p=30,  # Show only the last 30 merged clusters
-    leaf_font_size=10.,
-    show_contracted=True,  # Show contracted nodes as a triangle
-)
-plt.axhline(y=cut_height, color='r', linestyle='--', label=f'Cut for 4 clusters')
-plt.legend()
-plt.tight_layout()
-plt.show()
-
-# Perform clustering with the optimal number of clusters
-n_clusters = 4
-clusters = fcluster(Z, n_clusters, criterion='maxclust')
-
-# Visualize the clusters
-plt.figure(figsize=(10, 8))
-colors = cm.nipy_spectral(clusters.astype(float) / np.max(clusters))
-plt.scatter(X[:, 0], X[:, 1], marker='o', c=colors)
-plt.title(f'Hierarchical Clustering with {n_clusters} Clusters')
-plt.xlabel('Feature 1')
-plt.ylabel('Feature 2')
-plt.grid(True, linestyle='--', alpha=0.7)
-plt.show()"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Step 3: Determine the optimal number of clusters</p>
-                <p>Let's use silhouette analysis to determine the optimal number of clusters.</p>
-              </div>
-
-              <NotebookCell
-                cellId="cell3"
-                executionCount={4}
-                initialCode="# Determine optimal number of clusters using silhouette score
-silhouette_scores = []
-range_n_clusters = range(2, 8)
-
-for n_clusters in range_n_clusters:
-    # Perform hierarchical clustering
-    model = AgglomerativeClustering(n_clusters=n_clusters, linkage=best_method)
-    cluster_labels = model.fit_predict(X)
-    
-    # Calculate silhouette score
-    silhouette_avg = silhouette_score(X, cluster_labels)
-    silhouette_scores.append(silhouette_avg)
-    print(f'n_clusters={n_clusters}: {silhouette_avg:.4f}')
-
-# Find optimal number of clusters
-optimal_clusters = range_n_clusters[np.argmax(silhouette_scores)]
-print(f'Ideal number of clusters: {optimal_clusters}')
-
-# Plot silhouette scores
-plt.figure(figsize=(10, 6))
-plt.plot(range_n_clusters, silhouette_scores, 'bo-')
-plt.xlabel('Number of clusters')
-plt.ylabel('Silhouette Score')
-plt.title('Silhouette Analysis for Optimal Number of Clusters')
-plt.grid(True)
-plt.show()"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Try it yourself!</p>
-                <p>Modify the code above to experiment with different aspects of hierarchical clustering:</p>
-                <ul className="list-disc list-inside mt-2">
-                  <li>Try different distance metrics (Euclidean, Manhattan, cosine) and compare results</li>
-                  <li>Experiment with clusters that have different shapes or densities</li>
-                  <li>Implement divisive hierarchical clustering (top-down approach)</li>
-                  <li>Apply hierarchical clustering to a real-world dataset</li>
-                  <li>Create a heat map to visualize pairwise distances between samples</li>
-                </ul>
-              </div>
-            </div>
-          </div>
         </TabsContent>
       </Tabs>
     </div>

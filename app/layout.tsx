@@ -12,7 +12,7 @@ const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mon
 export const metadata: Metadata = {
   title: "ML Notebook - Interactive Machine Learning Education",
   description: "Learn about machine learning and deep learning models through interactive notebook-style tutorials",
-    generator: 'v0.dev'
+  generator: "v0.dev",
 }
 
 export default function RootLayout({

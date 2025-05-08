@@ -129,7 +129,7 @@ export default function RNNVisualization({ width = 600, height = 400 }: RNNVisua
 
       // Highlight current time step
       if (t === timeStep) {
-        ctx.fillStyle = "#e0e0e0"
+        ctx.fillStyle = "#d0d0d0"
       } else {
         ctx.fillStyle = "#f0f0f0"
       }
@@ -342,7 +342,7 @@ export default function RNNVisualization({ width = 600, height = 400 }: RNNVisua
 
       ctx.beginPath()
       ctx.arc(forgetX, forgetY, gateRadius, 0, Math.PI * 2)
-      ctx.fillStyle = `rgba(255, 0, 0, ${gateVisibility})`
+      ctx.fillStyle = `rgba(150, 150, 150, ${gateVisibility})`
       ctx.fill()
       ctx.strokeStyle = "#000"
       ctx.lineWidth = 1
@@ -360,7 +360,7 @@ export default function RNNVisualization({ width = 600, height = 400 }: RNNVisua
 
       ctx.beginPath()
       ctx.arc(inputX, inputY, gateRadius, 0, Math.PI * 2)
-      ctx.fillStyle = `rgba(0, 255, 0, ${gateVisibility})`
+      ctx.fillStyle = `rgba(100, 100, 100, ${gateVisibility})`
       ctx.fill()
       ctx.strokeStyle = "#000"
       ctx.lineWidth = 1
@@ -378,7 +378,7 @@ export default function RNNVisualization({ width = 600, height = 400 }: RNNVisua
 
       ctx.beginPath()
       ctx.arc(outputX, outputY, gateRadius, 0, Math.PI * 2)
-      ctx.fillStyle = `rgba(0, 0, 255, ${gateVisibility})`
+      ctx.fillStyle = `rgba(50, 50, 50, ${gateVisibility})`
       ctx.fill()
       ctx.strokeStyle = "#000"
       ctx.lineWidth = 1

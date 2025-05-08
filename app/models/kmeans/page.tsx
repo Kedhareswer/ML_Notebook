@@ -4,14 +4,12 @@ import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowRight, BookOpen, Code, PieChart } from "lucide-react"
+import { ArrowRight, BookOpen, PieChart } from "lucide-react"
 import Link from "next/link"
-import NotebookCell from "@/components/notebook-cell"
 import ModelVisualization from "@/components/model-visualization"
 
 export default function KMeansPage() {
   const [activeTab, setActiveTab] = useState("explanation")
-  const [executionCount, setExecutionCount] = useState(1)
 
   // K-Means visualization function
   const renderKMeans = (
@@ -30,6 +28,10 @@ export default function KMeansPage() {
     const plotWidth = width - 2 * margin
     const plotHeight = height - 2 * margin
 
+    // Draw background
+    ctx.fillStyle = "#f8f9fa"
+    ctx.fillRect(margin, margin, plotWidth, plotHeight)
+
     // Generate random data points with clusters
     const points = []
     const k = clusters
@@ -39,8 +41,8 @@ export default function KMeansPage() {
     const centers = []
     for (let i = 0; i < k; i++) {
       centers.push({
-        x: margin + Math.random() * plotWidth,
-        y: margin + Math.random() * plotHeight,
+        x: margin + margin + Math.random() * (plotWidth - 2 * margin),
+        y: margin + margin + Math.random() * (plotHeight - 2 * margin),
       })
     }
 
@@ -54,10 +56,22 @@ export default function KMeansPage() {
       points.push({ x, y, cluster: -1 }) // Initially no cluster assignment
     }
 
-    // Colors for different clusters
+    // Colors for different clusters with improved visibility
     const colors = ["#FF5733", "#33FF57", "#3357FF", "#F3FF33", "#33FFF5", "#F533FF", "#FF3333", "#33FF33", "#3333FF"]
 
-    // Run K-means algorithm
+    // Save initial state of points for animation
+    const initialPoints = JSON.parse(JSON.stringify(points))
+
+    // Show initial state first
+    // Draw all points in gray to show initial state
+    for (let i = 0; i < points.length; i++) {
+      const point = initialPoints[i]
+      ctx.beginPath()
+      ctx.arc(point.x, point.y, 5, 0, Math.PI * 2)
+      ctx.fillStyle = "#AAAAAA"
+      ctx.fill()
+    }
+
     // Initialize centroids randomly
     const centroids = []
     const usedIndexes = new Set()
@@ -69,6 +83,20 @@ export default function KMeansPage() {
         centroids.push({ x: points[idx].x, y: points[idx].y })
       }
     }
+
+    // Visualize centroid initialization
+    for (let i = 0; i < centroids.length; i++) {
+      ctx.beginPath()
+      ctx.arc(centroids[i].x, centroids[i].y, 8, 0, Math.PI * 2)
+      ctx.fillStyle = "#000000"
+      ctx.fill()
+      ctx.strokeStyle = colors[i % colors.length]
+      ctx.lineWidth = 3
+      ctx.stroke()
+    }
+
+    // Store centroid movement for visualization
+    const centroidHistory = [JSON.parse(JSON.stringify(centroids))]
 
     // Run iterations
     for (let iter = 0; iter < iterations; iter++) {
@@ -109,26 +137,9 @@ export default function KMeansPage() {
           }
         }
       }
-    }
 
-    // Draw points
-    for (let i = 0; i < points.length; i++) {
-      const point = points[i]
-      ctx.beginPath()
-      ctx.arc(point.x, point.y, 5, 0, Math.PI * 2)
-      ctx.fillStyle = colors[point.cluster % colors.length]
-      ctx.fill()
-    }
-
-    // Draw centroids
-    for (let i = 0; i < centroids.length; i++) {
-      ctx.beginPath()
-      ctx.arc(centroids[i].x, centroids[i].y, 8, 0, Math.PI * 2)
-      ctx.fillStyle = "#000000"
-      ctx.fill()
-      ctx.strokeStyle = colors[i % colors.length]
-      ctx.lineWidth = 3
-      ctx.stroke()
+      // Save centroid positions for animation
+      centroidHistory.push(JSON.parse(JSON.stringify(centroids)))
     }
 
     // Draw voronoi-like decision boundaries
@@ -152,68 +163,145 @@ export default function KMeansPage() {
       }
     }
 
-    // Add legend
+    // Visualize convergence paths for centroids
+    for (let i = 0; i < centroids.length; i++) {
+      const path = centroidHistory.map((history) => history[i])
+
+      ctx.strokeStyle = colors[i % colors.length]
+      ctx.lineWidth = 2
+      ctx.setLineDash([3, 3])
+
+      ctx.beginPath()
+      ctx.moveTo(path[0].x, path[0].y)
+
+      for (let j = 1; j < path.length; j++) {
+        ctx.lineTo(path[j].x, path[j].y)
+      }
+
+      ctx.stroke()
+      ctx.setLineDash([])
+    }
+
+    // Draw the final state of points
+    for (let i = 0; i < points.length; i++) {
+      const point = points[i]
+      ctx.beginPath()
+      ctx.arc(point.x, point.y, 5, 0, Math.PI * 2)
+      ctx.fillStyle = colors[point.cluster % colors.length]
+      ctx.fill()
+    }
+
+    // Draw final centroids
+    for (let i = 0; i < centroids.length; i++) {
+      ctx.beginPath()
+      ctx.arc(centroids[i].x, centroids[i].y, 8, 0, Math.PI * 2)
+      ctx.fillStyle = "#000000"
+      ctx.fill()
+      ctx.strokeStyle = colors[i % colors.length]
+      ctx.lineWidth = 3
+      ctx.stroke()
+    }
+
+    // Draw enhanced legend
+    const legendX = width - 160
+    const legendY = 50
+    const legendSpacing = 25
+    const legendBoxSize = 15
+
+    // Draw legend background
+    ctx.fillStyle = "rgba(255, 255, 255, 0.8)"
+    ctx.fillRect(legendX - 10, legendY - 10, 150, (k + 3) * legendSpacing + 10)
+    ctx.strokeStyle = "#ddd"
+    ctx.strokeRect(legendX - 10, legendY - 10, 150, (k + 3) * legendSpacing + 10)
+
+    // Draw legend title
+    ctx.fillStyle = "#000"
+    ctx.font = "14px Arial"
+    ctx.textAlign = "left"
+    ctx.fillText("K-Means Legend", legendX, legendY)
+
+    // Draw cluster legend items
+    for (let i = 0; i < k; i++) {
+      // Cluster circle
+      ctx.beginPath()
+      ctx.arc(
+        legendX + legendBoxSize / 2,
+        legendY + (i + 1) * legendSpacing + legendBoxSize / 2,
+        legendBoxSize / 2,
+        0,
+        Math.PI * 2,
+      )
+      ctx.fillStyle = colors[i % colors.length]
+      ctx.fill()
+
+      // Label
+      ctx.fillStyle = "#000"
+      ctx.textAlign = "left"
+      ctx.fillText(
+        `Cluster ${i + 1}`,
+        legendX + legendBoxSize + 10,
+        legendY + (i + 1) * legendSpacing + legendBoxSize / 2 + 4,
+      )
+    }
+
+    // Centroid legend
+    ctx.beginPath()
+    ctx.arc(
+      legendX + legendBoxSize / 2,
+      legendY + (k + 1) * legendSpacing + legendBoxSize / 2,
+      legendBoxSize / 2,
+      0,
+      Math.PI * 2,
+    )
+    ctx.fillStyle = "#000"
+    ctx.fill()
+    ctx.strokeStyle = "#FF5733"
+    ctx.lineWidth = 2
+    ctx.stroke()
+
+    ctx.fillStyle = "#000"
+    ctx.textAlign = "left"
+    ctx.fillText("Centroid", legendX + legendBoxSize + 10, legendY + (k + 1) * legendSpacing + legendBoxSize / 2 + 4)
+
+    // Path legend
+    ctx.strokeStyle = "#FF5733"
+    ctx.lineWidth = 2
+    ctx.setLineDash([3, 3])
+
+    ctx.beginPath()
+    ctx.moveTo(legendX, legendY + (k + 2) * legendSpacing + legendBoxSize / 2)
+    ctx.lineTo(legendX + legendBoxSize, legendY + (k + 2) * legendSpacing + legendBoxSize / 2)
+    ctx.stroke()
+    ctx.setLineDash([])
+
+    ctx.fillStyle = "#000"
+    ctx.textAlign = "left"
+    ctx.fillText(
+      "Convergence Path",
+      legendX + legendBoxSize + 10,
+      legendY + (k + 2) * legendSpacing + legendBoxSize / 2 + 4,
+    )
+
+    // Add algorithm iteration info
     ctx.fillStyle = "#000"
     ctx.font = "14px Arial"
     ctx.textAlign = "left"
     ctx.fillText(`K = ${clusters}, Iterations = ${iterations}, Noise = ${noise}`, margin, height - 10)
-  }
 
-  const handleExecuteCode = async (code: string, cellId: string) => {
-    // Simulate code execution
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    setExecutionCount((prev) => prev + 1)
-
-    if (cellId === "cell1") {
-      return (
-        <div className="font-mono text-sm whitespace-pre-wrap">
-          Inertia: 307.25
-          <br />
-          Silhouette Score: 0.6824
-          <br />
-          Number of iterations: 8
-        </div>
-      )
-    } else if (cellId === "cell2") {
-      return (
-        <div>
-          <div className="font-mono text-sm mb-2">K-Means Clusters and Centroids:</div>
-          <div className="bg-neutral-100 h-40 w-full rounded-md flex items-center justify-center">
-            <p className="text-neutral-500">K-Means clustering plot</p>
-          </div>
-        </div>
-      )
-    } else if (cellId === "cell3") {
-      return (
-        <div className="font-mono text-sm whitespace-pre-wrap">
-          Optimal number of clusters: 4
-          <br />
-          Inertia values for k=1 to k=10:
-          <br />
-          k=1: 1432.56
-          <br />
-          k=2: 681.93
-          <br />
-          k=3: 452.18
-          <br />
-          k=4: 307.25
-          <br />
-          k=5: 253.87
-          <br />
-          k=6: 220.43
-          <br />
-          k=7: 193.21
-          <br />
-          k=8: 175.68
-          <br />
-          k=9: 160.24
-          <br />
-          k=10: 148.56
-        </div>
-      )
+    // Inertia calculation (sum of squared distances from points to their centroids)
+    let inertia = 0
+    for (let i = 0; i < points.length; i++) {
+      const point = points[i]
+      const centroid = centroids[point.cluster]
+      const dist = Math.sqrt(Math.pow(point.x - centroid.x, 2) + Math.pow(point.y - centroid.y, 2))
+      inertia += dist * dist
     }
 
-    return "Executed successfully"
+    // Show inertia value (quality metric)
+    ctx.fillStyle = "#000"
+    ctx.font = "14px Arial"
+    ctx.textAlign = "left"
+    ctx.fillText(`Inertia: ${Math.round(inertia)}`, margin, height - 30)
   }
 
   return (
@@ -238,7 +326,7 @@ export default function KMeansPage() {
       </div>
 
       <Tabs defaultValue="explanation" value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-        <TabsList className="grid w-full grid-cols-3 bg-neutral-100 text-neutral-900">
+        <TabsList className="grid w-full grid-cols-2 bg-neutral-100 text-neutral-900">
           <TabsTrigger value="explanation" className="flex items-center gap-2 data-[state=active]:bg-white">
             <BookOpen className="h-4 w-4" />
             <span>Explanation</span>
@@ -246,10 +334,6 @@ export default function KMeansPage() {
           <TabsTrigger value="visualization" className="flex items-center gap-2 data-[state=active]:bg-white">
             <PieChart className="h-4 w-4" />
             <span>Visualization</span>
-          </TabsTrigger>
-          <TabsTrigger value="notebook" className="flex items-center gap-2 data-[state=active]:bg-white">
-            <Code className="h-4 w-4" />
-            <span>Notebook</span>
           </TabsTrigger>
         </TabsList>
 
@@ -326,7 +410,7 @@ export default function KMeansPage() {
                 </div>
               </div>
 
-              <div className="bg-neutral-100 p-4 rounded-lg mt-6">
+              <div className="bg-neutral-100 p-4 rounded-lg mt-4">
                 <h3 className="font-medium text-neutral-900 mb-2">Advantages and Limitations</h3>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
@@ -451,138 +535,29 @@ export default function KMeansPage() {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
-
-        <TabsContent value="notebook" className="space-y-8">
-          <div className="bg-white border border-neutral-300 rounded-lg p-6">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-neutral-900 mb-2">K-Means Implementation</h2>
-              <p className="text-neutral-700">
-                This notebook demonstrates how to implement K-Means clustering using Python and scikit-learn. Execute
-                each cell to see the results.
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              <NotebookCell
-                cellId="cell0"
-                executionCount={1}
-                initialCode="import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.cluster import KMeans
-from sklearn.datasets import make_blobs
-from sklearn.metrics import silhouette_score
-from matplotlib.colors import ListedColormap
-
-# Set random seed for reproducibility
-np.random.seed(42)"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Step 1: Generate and cluster synthetic data</p>
-                <p>Let's create a synthetic dataset with clearly defined clusters and apply K-means clustering.</p>
-              </div>
-
-              <NotebookCell
-                cellId="cell1"
-                executionCount={2}
-                initialCode="# Generate synthetic data
-X, y_true = make_blobs(n_samples=300, centers=4, cluster_std=0.60, random_state=42)
-
-# Create and fit the K-means model
-kmeans = KMeans(n_clusters=4, init='k-means++', n_init=10, random_state=42)
-kmeans.fit(X)
-
-# Get the cluster assignments and centroids
-y_kmeans = kmeans.predict(X)
-centroids = kmeans.cluster_centers_
-
-# Calculate inertia and silhouette score
-inertia = kmeans.inertia_
-silhouette = silhouette_score(X, y_kmeans)
-
-print(f'Inertia: {inertia:.2f}')
-print(f'Silhouette Score: {silhouette:.4f}')
-print(f'Number of iterations: {kmeans.n_iter_}')"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Step 2: Visualize the clusters</p>
-                <p>Let's visualize the clusters and centroids from our K-means model.</p>
-              </div>
-
-              <NotebookCell
-                cellId="cell2"
-                executionCount={3}
-                initialCode="# Plot the clusters
-plt.figure(figsize=(10, 8))
-colors = ['#FF9999', '#66B2FF', '#99FF99', '#FFCC99']
-
-# Plot data points with cluster colors
-for i in range(len(np.unique(y_kmeans))):
-    plt.scatter(X[y_kmeans == i, 0], X[y_kmeans == i, 1], s=50, c=colors[i], label=f'Cluster {i+1}')
-
-# Plot centroids
-plt.scatter(centroids[:, 0], centroids[:, 1], s=200, c='black', marker='X', label='Centroids')
-
-plt.title('K-Means Clustering Results')
-plt.xlabel('Feature 1')
-plt.ylabel('Feature 2')
-plt.legend()
-plt.grid(True, linestyle='--', alpha=0.7)
-plt.show()"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Step 3: Find the optimal number of clusters</p>
-                <p>Let's use the Elbow Method to determine the optimal number of clusters for our data.</p>
-              </div>
-
-              <NotebookCell
-                cellId="cell3"
-                executionCount={4}
-                initialCode="# Calculate inertia for different values of k
-inertias = []
-k_range = range(1, 11)
-
-for k in k_range:
-    kmeans = KMeans(n_clusters=k, init='k-means++', n_init=10, random_state=42)
-    kmeans.fit(X)
-    inertias.append(kmeans.inertia_)
-
-# Find the elbow point
-# (A simple heuristic: look for the point where the rate of decrease sharply changes)
-differences = np.diff(inertias)
-differences_of_differences = np.diff(differences)
-elbow_idx = np.argmin(differences_of_differences) + 1
-optimal_k = k_range[elbow_idx]
-
-print('Optimal number of clusters:', optimal_k)
-print('Inertia values for k=1 to k=10:')
-for i, k in enumerate(k_range):
-    print('k=' + str(k) + ': ' + str(round(inertias[i], 2)))"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Try it yourself!</p>
-                <p>Modify the code above to experiment with different aspects of K-Means clustering:</p>
-                <ul className="list-disc list-inside mt-2">
-                  <li>Try different initialization methods ('random', 'k-means++') and compare results</li>
-                  <li>Generate clusters with different variances and see how K-means performs</li>
-                  <li>Implement the silhouette method for finding the optimal k</li>
-                  <li>Apply K-means to a real-world dataset (e.g., Iris dataset)</li>
-                  <li>Visualize how centroids move during iterations</li>
-                </ul>
-              </div>
-            </div>
+          <div className="bg-neutral-50 p-4 rounded-lg border border-neutral-200 mt-6">
+            <h3 className="font-medium text-neutral-900 mb-2">Visualization Features</h3>
+            <ul className="list-disc list-inside space-y-1 text-neutral-700">
+              <li>
+                <strong>Cluster boundaries</strong>: The colored regions show the decision boundaries of each cluster
+              </li>
+              <li>
+                <strong>Centroids</strong>: The black circles represent the centroid (mean) of each cluster
+              </li>
+              <li>
+                <strong>Convergence paths</strong>: The dashed lines show how centroids move during the iterations
+              </li>
+              <li>
+                <strong>Inertia</strong>: A metric of clustering quality (lower is better) - represents the sum of
+                squared distances
+              </li>
+              <li>
+                <strong>Interactive parameters</strong>: Adjust clusters, iterations, and noise to see their effects
+              </li>
+            </ul>
+            <p className="mt-3 text-neutral-700">
+              The visualization shows the complete K-means algorithm process from initialization to convergence.
+            </p>
           </div>
         </TabsContent>
       </Tabs>

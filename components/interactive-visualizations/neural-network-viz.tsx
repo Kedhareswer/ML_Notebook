@@ -127,11 +127,11 @@ export default function NeuralNetworkVisualization({ width = 600, height = 400 }
 
         // Set neuron color based on layer type
         if (layer === 0) {
-          ctx.fillStyle = "#e3f2fd" // Light blue for input
+          ctx.fillStyle = "#e0e0e0" // Light gray for input
         } else if (layer === layersCount - 1) {
-          ctx.fillStyle = "#e8f5e9" // Light green for output
+          ctx.fillStyle = "#c0c0c0" // Medium gray for output
         } else {
-          ctx.fillStyle = "#f5f5f5" // Light gray for hidden
+          ctx.fillStyle = "#f5f5f5" // Very light gray for hidden
         }
 
         // Highlight based on animation
@@ -139,7 +139,7 @@ export default function NeuralNetworkVisualization({ width = 600, height = 400 }
           const neuronActivationStep = (animationStep + layer * 10) % 120
           if (neuronActivationStep < 10) {
             // Brief activation highlight
-            ctx.fillStyle = "#ffd54f" // Amber for activation
+            ctx.fillStyle = "#909090" // Gray for activation
           }
         }
 
@@ -330,7 +330,7 @@ export default function NeuralNetworkVisualization({ width = 600, height = 400 }
       currentX = currentX - gradient * actualLearningRate
     }
 
-    ctx.strokeStyle = "#f44336"
+    ctx.strokeStyle = "#000"
     ctx.lineWidth = 2
     ctx.stroke()
 
@@ -344,12 +344,7 @@ export default function NeuralNetworkVisualization({ width = 600, height = 400 }
       ctx.beginPath()
       ctx.arc(currentX, graphStartY + graphHeight - y, 4, 0, Math.PI * 2)
 
-      if (step === numSteps) {
-        // Highlight the final position
-        ctx.fillStyle = "#e53935"
-      } else {
-        ctx.fillStyle = "#f44336"
-      }
+      ctx.fillStyle = step === numSteps ? "#444" : "#666"
 
       ctx.fill()
       ctx.strokeStyle = "#fff"

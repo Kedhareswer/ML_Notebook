@@ -4,14 +4,12 @@ import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowLeft, ArrowRight, BookOpen, Code, BarChart } from "lucide-react"
+import { ArrowLeft, ArrowRight, BookOpen, BarChart } from "lucide-react"
 import Link from "next/link"
-import NotebookCell from "@/components/notebook-cell"
 import ModelVisualization from "@/components/model-visualization"
 
 export default function NaiveBayesPage() {
   const [activeTab, setActiveTab] = useState("explanation")
-  const [executionCount, setExecutionCount] = useState(1)
 
   // Naive Bayes visualization function
   const renderNaiveBayes = (
@@ -157,49 +155,6 @@ export default function NaiveBayesPage() {
     ctx.fillText(`σ² = ${variance.toFixed(2)}`, margin + 10, margin + 20)
   }
 
-  const handleExecuteCode = async (code: string, cellId: string) => {
-    // Simulate code execution
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    setExecutionCount((prev) => prev + 1)
-
-    if (cellId === "cell1") {
-      return (
-        <div className="font-mono text-sm whitespace-pre-wrap">
-          Gaussian Naive Bayes Accuracy: 0.8400
-          <br />
-          Multinomial Naive Bayes Accuracy: 0.7600
-          <br />
-          Bernoulli Naive Bayes Accuracy: 0.7200
-        </div>
-      )
-    } else if (cellId === "cell2") {
-      return (
-        <div>
-          <div className="font-mono text-sm mb-2">Naive Bayes Decision Boundaries:</div>
-          <div className="bg-neutral-100 h-40 w-full rounded-md flex items-center justify-center">
-            <p className="text-neutral-500">Naive Bayes decision boundaries plot</p>
-          </div>
-        </div>
-      )
-    } else if (cellId === "cell3") {
-      return (
-        <div className="font-mono text-sm whitespace-pre-wrap">
-          Accuracy on test set: 0.8400
-          <br />
-          Precision: 0.8182
-          <br />
-          Recall: 0.9000
-          <br />
-          F1 Score: 0.8571
-          <br />
-          Log Loss: 0.4306
-        </div>
-      )
-    }
-
-    return "Executed successfully"
-  }
-
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
@@ -224,7 +179,7 @@ export default function NaiveBayesPage() {
       </div>
 
       <Tabs defaultValue="explanation" value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-        <TabsList className="grid w-full grid-cols-3 bg-neutral-100 text-neutral-900">
+        <TabsList className="grid w-full grid-cols-2 bg-neutral-100 text-neutral-900">
           <TabsTrigger value="explanation" className="flex items-center gap-2 data-[state=active]:bg-white">
             <BookOpen className="h-4 w-4" />
             <span>Explanation</span>
@@ -232,10 +187,6 @@ export default function NaiveBayesPage() {
           <TabsTrigger value="visualization" className="flex items-center gap-2 data-[state=active]:bg-white">
             <BarChart className="h-4 w-4" />
             <span>Visualization</span>
-          </TabsTrigger>
-          <TabsTrigger value="notebook" className="flex items-center gap-2 data-[state=active]:bg-white">
-            <Code className="h-4 w-4" />
-            <span>Notebook</span>
           </TabsTrigger>
         </TabsList>
 
@@ -433,273 +384,20 @@ export default function NaiveBayesPage() {
               />
             </CardContent>
           </Card>
-
-          <Card className="border-neutral-300 bg-white">
-            <CardHeader>
-              <CardTitle className="text-neutral-900">Understanding the Parameters</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <h3 className="font-medium text-neutral-900">Variance (σ²)</h3>
-                <p className="text-neutral-700">
-                  This parameter controls the spread of the probability distributions for each class. A smaller variance
-                  creates narrower, more peaked distributions, while a larger variance creates wider, flatter
-                  distributions. In Gaussian Naive Bayes, each feature is assumed to follow a normal distribution with a
-                  class-specific mean and variance.
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="font-medium text-neutral-900">Prior Ratio (P(y=2)/P(y=1))</h3>
-                <p className="text-neutral-700">
-                  This parameter represents the ratio of prior probabilities between the two classes. A value of 1 means
-                  both classes are equally likely a priori. Values greater than 1 mean class 2 is more likely, while
-                  values less than 1 mean class 1 is more likely. Prior probabilities reflect our belief about class
-                  distribution before seeing any features.
-                </p>
-              </div>
-
-              <div className="bg-neutral-100 p-4 rounded-lg mt-4">
-                <h3 className="font-medium text-neutral-900 mb-2">Interpreting the Visualization</h3>
-                <ul className="list-disc list-inside space-y-2 text-neutral-700">
-                  <li>
-                    The <strong>blue curve</strong> represents the probability density function for class 1
-                  </li>
-                  <li>
-                    The <strong>red curve</strong> represents the probability density function for class 2
-                  </li>
-                  <li>
-                    The <strong>vertical dashed line</strong> is the decision boundary where the posterior probabilities
-                    are equal
-                  </li>
-                  <li>Points to the left of the boundary are classified as class 1, points to the right as class 2</li>
-                  <li>Notice how changing the variance affects the shape of the distributions</li>
-                  <li>
-                    Changing the prior ratio shifts the decision boundary, reflecting our prior belief about class
-                    probabilities
-                  </li>
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="notebook" className="space-y-8">
-          <div className="bg-white border border-neutral-300 rounded-lg p-6">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-neutral-900 mb-2">Naive Bayes Implementation</h2>
-              <p className="text-neutral-700">
-                This notebook demonstrates how to implement different types of Naive Bayes classifiers using Python and
-                scikit-learn. Execute each cell to see the results.
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              <NotebookCell
-                cellId="cell0"
-                executionCount={1}
-                initialCode="import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.datasets import make_classification
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.naive_bayes import GaussianNB, MultinomialNB, BernoulliNB
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, log_loss, confusion_matrix
-
-# Set random seed for reproducibility
-np.random.seed(42)"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">
-                  Step 1: Compare different types of Naive Bayes classifiers
-                </p>
-                <p>Let's create a synthetic dataset and compare the performance of different Naive Bayes variants.</p>
-              </div>
-
-              <NotebookCell
-                cellId="cell1"
-                executionCount={2}
-                initialCode="# Generate a synthetic dataset
-X, y = make_classification(
-    n_samples=200, 
-    n_features=10,
-    n_informative=5,
-    n_redundant=2,
-    n_classes=2,
-    random_state=42
-)
-
-# Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.25, random_state=42
-)
-
-# Standardize features for Gaussian NB
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
-
-# For Multinomial and Bernoulli NB, we need non-negative features
-# We'll use a simple transformation for demonstration
-X_train_nonneg = X_train - X_train.min(axis=0)
-X_test_nonneg = X_test - X_train.min(axis=0)
-
-# For Bernoulli NB, we'll binarize the features
-X_train_binary = (X_train_nonneg > X_train_nonneg.mean(axis=0)).astype(int)
-X_test_binary = (X_test_nonneg > X_train_nonneg.mean(axis=0)).astype(int)
-
-# Train Gaussian Naive Bayes
-gnb = GaussianNB()
-gnb.fit(X_train_scaled, y_train)
-gnb_pred = gnb.predict(X_test_scaled)
-gnb_accuracy = accuracy_score(y_test, gnb_pred)
-
-# Train Multinomial Naive Bayes
-mnb = MultinomialNB()
-mnb.fit(X_train_nonneg, y_train)
-mnb_pred = mnb.predict(X_test_nonneg)
-mnb_accuracy = accuracy_score(y_test, mnb_pred)
-
-# Train Bernoulli Naive Bayes
-bnb = BernoulliNB()
-bnb.fit(X_train_binary, y_train)
-bnb_pred = bnb.predict(X_test_binary)
-bnb_accuracy = accuracy_score(y_test, bnb_pred)
-
-print(f'Gaussian Naive Bayes Accuracy: {gnb_accuracy:.4f}')
-print(f'Multinomial Naive Bayes Accuracy: {mnb_accuracy:.4f}')
-print(f'Bernoulli Naive Bayes Accuracy: {bnb_accuracy:.4f}')"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">
-                  Step 2: Visualize decision boundaries for Gaussian Naive Bayes
-                </p>
-                <p>Let's create a 2D dataset to visualize how Gaussian Naive Bayes creates decision boundaries.</p>
-              </div>
-
-              <NotebookCell
-                cellId="cell2"
-                executionCount={3}
-                initialCode="# Generate a 2D dataset for visualization
-X_2d, y_2d = make_classification(
-    n_samples=300, 
-    n_features=2,
-    n_redundant=0,
-    n_informative=2,
-    n_clusters_per_class=1,
-    class_sep=1.5,
-    random_state=42
-)
-
-# Split the data
-X_train_2d, X_test_2d, y_train_2d, y_test_2d = train_test_split(
-    X_2d, y_2d, test_size=0.25, random_state=42
-)
-
-# Train Gaussian Naive Bayes
-gnb_2d = GaussianNB()
-gnb_2d.fit(X_train_2d, y_train_2d)
-
-# Function to plot decision boundaries
-def plot_decision_boundary(X, y, model, title):
-    # Set up the figure
-    plt.figure(figsize=(10, 6))
-    
-    # Determine plot boundaries
-    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.1),
-                         np.arange(y_min, y_max, 0.1))
-    
-    # Predict using the model
-    Z = model.predict(np.c_[xx.ravel(), yy.ravel()])
-    Z = Z.reshape(xx.shape)
-    
-    # Plot decision boundary and points
-    plt.contourf(xx, yy, Z, alpha=0.3)
-    plt.scatter(X[:, 0], X[:, 1], c=y, edgecolors='k', marker='o')
-    plt.title(title)
-    plt.xlabel('Feature 1')
-    plt.ylabel('Feature 2')
-    
-    # Show the plot
-    plt.tight_layout()
-    plt.show()
-
-# Plot decision boundary
-plot_decision_boundary(X_2d, y_2d, gnb_2d, 'Gaussian Naive Bayes Decision Boundary')
-
-# Calculate and print accuracy
-gnb_2d_accuracy = accuracy_score(y_test_2d, gnb_2d.predict(X_test_2d))
-print(f'Gaussian Naive Bayes Accuracy on 2D data: {gnb_2d_accuracy:.4f}')"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Step 3: Detailed evaluation of Gaussian Naive Bayes</p>
-                <p>Let's perform a more detailed evaluation of the Gaussian Naive Bayes model.</p>
-              </div>
-
-              <NotebookCell
-                cellId="cell3"
-                executionCount={4}
-                initialCode="# Train Gaussian Naive Bayes with prior probabilities
-gnb_with_prior = GaussianNB(priors=[0.3, 0.7])  # Specifying class priors
-gnb_with_prior.fit(X_train_scaled, y_train)
-
-# Make predictions
-y_pred = gnb_with_prior.predict(X_test_scaled)
-y_prob = gnb_with_prior.predict_proba(X_test_scaled)  # Probability estimates
-
-# Calculate various metrics
-accuracy = accuracy_score(y_test, y_pred)
-precision = precision_score(y_test, y_pred)
-recall = recall_score(y_test, y_pred)
-f1 = f1_score(y_test, y_pred)
-logloss = log_loss(y_test, y_prob)
-
-# Print metrics
-print(f'Accuracy on test set: {accuracy:.4f}')
-print(f'Precision: {precision:.4f}')
-print(f'Recall: {recall:.4f}')
-print(f'F1 Score: {f1:.4f}')
-print(f'Log Loss: {logloss:.4f}')
-
-# Examine the learned parameters
-print('\nLearned Parameters:')
-print(f'Class Priors: {gnb_with_prior.class_prior_}')
-print(f'Feature Means per Class:')
-for i, class_mean in enumerate(gnb_with_prior.theta_):
-    print(f'Class {i}: {class_mean[:3]}...')  # Show first 3 features
-print(f'Feature Variances per Class:')
-for i, class_var in enumerate(gnb_with_prior.var_):
-    print(f'Class {i}: {class_var[:3]}...')  # Show first 3 features"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Try it yourself!</p>
-                <p>Modify the code above to experiment with different aspects of Naive Bayes:</p>
-                <ul className="list-disc list-inside mt-2">
-                  <li>Try different prior probabilities and observe their effect on the decision boundary</li>
-                  <li>Implement text classification using Multinomial Naive Bayes</li>
-                  <li>Experiment with feature selection to improve model performance</li>
-                  <li>Compare Naive Bayes with other classification algorithms on the same dataset</li>
-                  <li>Implement Laplace smoothing to handle the zero frequency problem</li>
-                </ul>
-              </div>
-            </div>
-          </div>
         </TabsContent>
       </Tabs>
+      <div className="flex justify-between items-center mt-12 border-t border-neutral-300 pt-6">
+        <Button asChild variant="outline">
+          <Link href="/models/logistic-regression">
+            <ArrowLeft className="mr-2 h-4 w-4" /> Previous: Logistic Regression
+          </Link>
+        </Button>
+        <Button asChild variant="outline">
+          <Link href="/models/gradient-boosting">
+            Next: Gradient Boosting <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
+        </Button>
+      </div>
     </div>
   )
 }

@@ -156,9 +156,9 @@ export default function SVMVisualization({ width = 600, height = 400 }: SVMVisua
       ctx.arc(point.x, point.y, 6, 0, Math.PI * 2)
 
       if (point.class === 1) {
-        ctx.fillStyle = "#000"
+        ctx.fillStyle = "#000" // Black for class 1
       } else {
-        ctx.fillStyle = "#fff"
+        ctx.fillStyle = "#fff" // White for class 2
         ctx.strokeStyle = "#000"
         ctx.lineWidth = 1
         ctx.stroke()
@@ -302,7 +302,7 @@ export default function SVMVisualization({ width = 600, height = 400 }: SVMVisua
         const classValue = getClass(x, y)
 
         // Use more distinct colors with better opacity for visibility
-        ctx.fillStyle = classValue === 1 ? "rgba(33, 150, 243, 0.2)" : "rgba(244, 67, 54, 0.2)"
+        ctx.fillStyle = classValue === 1 ? "rgba(50, 50, 50, 0.2)" : "rgba(200, 200, 200, 0.2)"
         ctx.fillRect(margin + x, margin + y, cellWidth, cellHeight)
       }
     }

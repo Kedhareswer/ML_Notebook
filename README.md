@@ -47,7 +47,7 @@ Every model page follows a three-part structure:
 
 ## 🚀 Getting Started
 
-```bash
+\`\`\`bash
 # Clone the repository
 git clone https://github.com/yourusername/ml-educational-website.git
 
@@ -59,7 +59,7 @@ npm install
 
 # Start development server
 npm run dev
-```
+\`\`\`
 
 ## 🛠️ Tech Stack
 
@@ -70,7 +70,7 @@ npm run dev
 
 ## 📖 Project Structure
 
-```
+\`\`\`
 ml-educational-website/
 ├── app/                    # Next.js app directory
 │   ├── models/            # Model-specific pages
@@ -79,7 +79,7 @@ ml-educational-website/
 ├── components/            # Reusable React components
 ├── public/                # Static assets
 └── styles/                # Global styles
-```
+\`\`\`
 
 ## 🤝 Contributing
 

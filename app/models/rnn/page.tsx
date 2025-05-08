@@ -159,7 +159,7 @@ export default function RNNPage() {
           </TabsTrigger>
           <TabsTrigger value="notebook" className="flex items-center gap-2 data-[state=active]:bg-white">
             <Code className="h-4 w-4" />
-            <span>Notebook</span>
+            <span>Implementation</span>
           </TabsTrigger>
         </TabsList>
 
@@ -508,7 +508,7 @@ export default function RNNPage() {
         <TabsContent value="notebook" className="space-y-8">
           <div className="bg-white border border-neutral-300 rounded-lg p-6">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-neutral-900 mb-2">RNN Implementation</h2>
+              <h2 className="text-2xl font-bold text-neutral-900 mb-2">RNN in Practice</h2>
               <p className="text-neutral-700">
                 This notebook demonstrates how to implement a Recurrent Neural Network for sentiment analysis using
                 Python and TensorFlow/Keras. Execute each cell to see the results.

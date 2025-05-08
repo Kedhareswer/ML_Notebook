@@ -258,7 +258,7 @@ export default function RandomForestsPage() {
           <Button variant="outline" asChild>
             <Link href="/models">All Models</Link>
           </Button>
-          <Button asChild variant="notebook">
+          <Button asChild variant="default">
             <Link href="/models/svm">
               Next: Support Vector Machines <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
@@ -278,7 +278,7 @@ export default function RandomForestsPage() {
           </TabsTrigger>
           <TabsTrigger value="notebook" className="flex items-center gap-2 data-[state=active]:bg-white">
             <Code className="h-4 w-4" />
-            <span>Notebook</span>
+            <span>Implementation</span>
           </TabsTrigger>
         </TabsList>
 
@@ -537,7 +537,7 @@ export default function RandomForestsPage() {
         <TabsContent value="notebook" className="space-y-8">
           <div className="bg-white border border-neutral-300 rounded-lg p-6">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-neutral-900 mb-2">Random Forest Implementation</h2>
+              <h2 className="text-2xl font-bold text-neutral-900 mb-2">Random Forest in Practice</h2>
               <p className="text-neutral-700">
                 This notebook demonstrates how to implement Random Forests using Python and scikit-learn. Execute each
                 cell to see the results.

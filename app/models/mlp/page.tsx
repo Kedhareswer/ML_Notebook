@@ -5,13 +5,11 @@ import Link from "next/link"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowLeft, ArrowRight, BookOpen, Code, BarChart } from "lucide-react"
-import NotebookCell from "@/components/notebook-cell"
+import { ArrowLeft, ArrowRight, BookOpen, BarChart } from "lucide-react"
 import ModelVisualization from "@/components/model-visualization"
 
 export default function MLPPage() {
   const [activeTab, setActiveTab] = useState("explanation")
-  const [executionCount, setExecutionCount] = useState(1)
 
   // MLP visualization function
   const renderNeuralNetwork = (
@@ -184,60 +182,6 @@ export default function MLPPage() {
     )
   }
 
-  const handleExecuteCode = async (code: string, cellId: string) => {
-    // Simulate code execution
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    setExecutionCount((prev) => prev + 1)
-
-    if (cellId === "cell1") {
-      return (
-        <div className="font-mono text-sm whitespace-pre-wrap">
-          Epoch 1/10 25/25 [==============================] - 0s 2ms/step - loss: 0.6931 - accuracy: 0.5120 - val_loss:
-          0.6928 - val_accuracy: 0.5200 Epoch 2/10 25/25 [==============================] - 0s 2ms/step - loss: 0.6914 -
-          accuracy: 0.5440 - val_loss: 0.6910 - val_accuracy: 0.5600 Epoch 3/10 25/25 [==============================] -
-          0s 2ms/step - loss: 0.6895 - accuracy: 0.5680 - val_loss: 0.6891 - val_accuracy: 0.5800 Epoch 4/10 25/25
-          [==============================] - 0s 2ms/step - loss: 0.6873 - accuracy: 0.6000 - val_loss: 0.6869 -
-          val_accuracy: 0.6200 Epoch 5/10 25/25 [==============================] - 0s 2ms/step - loss: 0.6848 -
-          accuracy: 0.6320 - val_loss: 0.6844 - val_accuracy: 0.6400 Epoch 6/10 25/25 [==============================] -
-          0s 2ms/step - loss: 0.6819 - accuracy: 0.6640 - val_loss: 0.6815 - val_accuracy: 0.6800 Epoch 7/10 25/25
-          [==============================] - 0s 2ms/step - loss: 0.6786 - accuracy: 0.6960 - val_loss: 0.6782 -
-          val_accuracy: 0.7000 Epoch 8/10 25/25 [==============================] - 0s 2ms/step - loss: 0.6748 -
-          accuracy: 0.7280 - val_loss: 0.6744 - val_accuracy: 0.7400 Epoch 9/10 25/25 [==============================] -
-          0s 2ms/step - loss: 0.6705 - accuracy: 0.7600 - val_loss: 0.6701 - val_accuracy: 0.7800 Epoch 10/10 25/25
-          [==============================] - 0s 2ms/step - loss: 0.6657 - accuracy: 0.7920 - val_loss: 0.6653 -
-          val_accuracy: 0.8200 Test accuracy: 0.8400
-        </div>
-      )
-    } else if (cellId === "cell2") {
-      return (
-        <div>
-          <div className="font-mono text-sm mb-2">MLP Decision Boundaries:</div>
-          <div className="bg-neutral-100 h-40 w-full rounded-md flex items-center justify-center">
-            <p className="text-neutral-500">MLP decision boundaries plot</p>
-          </div>
-        </div>
-      )
-    } else if (cellId === "cell3") {
-      return (
-        <div className="font-mono text-sm whitespace-pre-wrap">
-          Architecture Comparison:
-          <br />
-          10 Neurons, 1 Hidden Layer: 0.8200 accuracy
-          <br />
-          100 Neurons, 1 Hidden Layer: 0.8600 accuracy
-          <br />
-          10 Neurons, 2 Hidden Layers: 0.8400 accuracy
-          <br />
-          100 Neurons, 2 Hidden Layers: 0.8800 accuracy
-          <br />
-          100-50-25 Neurons, 3 Hidden Layers: 0.9000 accuracy
-        </div>
-      )
-    }
-
-    return "Executed successfully"
-  }
-
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
@@ -248,7 +192,7 @@ export default function MLPPage() {
         <div className="flex gap-2">
           <Button variant="outline" asChild>
             <Link href="/models/pca">
-              <ArrowLeft className="mr-2 h-4 w-4" /> Principal Component Analysis
+              <ArrowLeft className="mr-2 h-4 w-4" /> Previous: Principal Component Analysis
             </Link>
           </Button>
           <Button asChild variant="notebook">
@@ -260,7 +204,7 @@ export default function MLPPage() {
       </div>
 
       <Tabs defaultValue="explanation" value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-        <TabsList className="grid w-full grid-cols-3 bg-neutral-100 text-neutral-900">
+        <TabsList className="grid w-full grid-cols-2 bg-neutral-100 text-neutral-900">
           <TabsTrigger value="explanation" className="flex items-center gap-2 data-[state=active]:bg-white">
             <BookOpen className="h-4 w-4" />
             <span>Overview</span>
@@ -268,10 +212,6 @@ export default function MLPPage() {
           <TabsTrigger value="visualization" className="flex items-center gap-2 data-[state=active]:bg-white">
             <BarChart className="h-4 w-4" />
             <span>Interactive Demo</span>
-          </TabsTrigger>
-          <TabsTrigger value="notebook" className="flex items-center gap-2 data-[state=active]:bg-white">
-            <Code className="h-4 w-4" />
-            <span>Code Implementation</span>
           </TabsTrigger>
         </TabsList>
 
@@ -427,336 +367,6 @@ export default function MLPPage() {
               />
             </CardContent>
           </Card>
-
-          <Card className="border-neutral-300 bg-white">
-            <CardHeader>
-              <CardTitle className="text-neutral-900">Understanding the Parameters</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <h3 className="font-medium text-neutral-900">Hidden Layers</h3>
-                <p className="text-neutral-700">
-                  This parameter controls the depth of the neural network. More hidden layers allow the network to learn
-                  more complex patterns and hierarchical representations. However, deeper networks are more difficult to
-                  train and may require more data. Notice how adding more layers creates a deeper network structure.
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="font-medium text-neutral-900">Neurons per Layer</h3>
-                <p className="text-neutral-700">
-                  This parameter determines the width of each hidden layer. More neurons increase the network's capacity
-                  to learn complex patterns but also increase the risk of overfitting and computational cost. Observe
-                  how increasing the number of neurons creates wider layers with more connections.
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="font-medium text-neutral-900">Learning Rate</h3>
-                <p className="text-neutral-700">
-                  This parameter controls how much the weights are updated during training. A higher learning rate means
-                  larger weight updates, which can lead to faster convergence but may also cause the network to
-                  overshoot the optimal solution. In this visualization, the learning rate affects the intensity of the
-                  connection colors, representing the magnitude of weight updates.
-                </p>
-              </div>
-
-              <div className="bg-neutral-100 p-4 rounded-lg mt-4">
-                <h3 className="font-medium text-neutral-900 mb-2">Interpreting the Visualization</h3>
-                <ul className="list-disc list-inside space-y-2 text-neutral-700">
-                  <li>
-                    <strong>Green nodes</strong> represent input neurons, which receive the raw data
-                  </li>
-                  <li>
-                    <strong>Blue nodes</strong> represent hidden neurons, which perform intermediate computations
-                  </li>
-                  <li>
-                    <strong>Red nodes</strong> represent output neurons, which produce the final predictions
-                  </li>
-                  <li>
-                    <strong>Blue lines</strong> represent positive weights (excitatory connections)
-                  </li>
-                  <li>
-                    <strong>Red lines</strong> represent negative weights (inhibitory connections)
-                  </li>
-                  <li>
-                    The <strong>intensity of the lines</strong> represents the strength of the connections, influenced
-                    by the learning rate
-                  </li>
-                  <li>
-                    Notice how the network becomes more complex with more layers and neurons, increasing its capacity to
-                    model complex functions
-                  </li>
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="notebook" className="space-y-8">
-          <div className="bg-white border border-neutral-300 rounded-lg p-6">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-neutral-900 mb-2">MLP Implementation</h2>
-              <p className="text-neutral-700">
-                This notebook demonstrates how to implement Multilayer Perceptrons using TensorFlow/Keras. Execute each
-                cell to see the results.
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              <NotebookCell
-                cellId="cell0"
-                executionCount={1}
-                initialCode="import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.datasets import make_classification
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.callbacks import EarlyStopping
-
-# Set random seed for reproducibility
-np.random.seed(42)
-tf.random.set_seed(42)"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Step 1: Create and train a basic MLP</p>
-                <p>Let's create a synthetic dataset and train a simple MLP with two hidden layers.</p>
-              </div>
-
-              <NotebookCell
-                cellId="cell1"
-                executionCount={2}
-                initialCode="# Generate a synthetic dataset
-X, y = make_classification(
-    n_samples=1000, 
-    n_features=20,
-    n_informative=10,
-    n_redundant=5,
-    n_classes=2,
-    random_state=42
-)
-
-# Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
-
-# Standardize the features
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
-
-# Build a simple MLP model
-model = Sequential([
-    Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
-    Dropout(0.2),
-    Dense(32, activation='relu'),
-    Dropout(0.2),
-    Dense(1, activation='sigmoid')
-])
-
-# Compile the model
-model.compile(
-    optimizer=Adam(learning_rate=0.001),
-    loss='binary_crossentropy',
-    metrics=['accuracy']
-)
-
-# Define early stopping
-early_stopping = EarlyStopping(
-    monitor='val_loss',
-    patience=5,
-    restore_best_weights=True
-)
-
-# Train the model
-history = model.fit(
-    X_train_scaled, y_train,
-    epochs=10,
-    batch_size=32,
-    validation_split=0.2,
-    callbacks=[early_stopping],
-    verbose=1
-)
-
-# Evaluate the model
-test_loss, test_acc = model.evaluate(X_test_scaled, y_test)
-print(f'Test accuracy: {test_acc:.4f}')"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Step 2: Visualize decision boundaries</p>
-                <p>Let's create a 2D dataset to visualize how the MLP creates non-linear decision boundaries.</p>
-              </div>
-
-              <NotebookCell
-                cellId="cell2"
-                executionCount={3}
-                initialCode="# Create a 2D dataset for visualization
-X_2d, y_2d = make_classification(
-    n_samples=1000,
-    n_features=2,
-    n_redundant=0,
-    n_informative=2,
-    n_clusters_per_class=2,
-    class_sep=1.0,
-    random_state=42
-)
-
-# Split the data
-X_train_2d, X_test_2d, y_train_2d, y_test_2d = train_test_split(
-    X_2d, y_2d, test_size=0.2, random_state=42
-)
-
-# Standardize
-scaler_2d = StandardScaler()
-X_train_2d_scaled = scaler_2d.fit_transform(X_train_2d)
-X_test_2d_scaled = scaler_2d.transform(X_test_2d)
-
-# Build a simple MLP for the 2D data
-model_2d = Sequential([
-    Dense(32, activation='relu', input_shape=(2,)),
-    Dense(16, activation='relu'),
-    Dense(1, activation='sigmoid')
-])
-
-# Compile the model
-model_2d.compile(
-    optimizer=Adam(learning_rate=0.001),
-    loss='binary_crossentropy',
-    metrics=['accuracy']
-)
-
-# Train the model
-history_2d = model_2d.fit(
-    X_train_2d_scaled, y_train_2d,
-    epochs=20,
-    batch_size=32,
-    validation_split=0.2,
-    verbose=0
-)
-
-# Function to plot decision boundaries
-def plot_decision_boundary(model, X, y, title):
-    # Set up the mesh grid
-    h = 0.02  # step size in the mesh
-    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
-    
-    # Scale the mesh points
-    mesh_points = np.c_[xx.ravel(), yy.ravel()]
-    mesh_points_scaled = scaler_2d.transform(mesh_points)
-    
-    # Predict on the mesh
-    Z = model.predict(mesh_points_scaled)
-    Z = (Z > 0.5).astype(int).reshape(xx.shape)
-    
-    # Plot the decision boundary
-    plt.figure(figsize=(10, 8))
-    plt.contourf(xx, yy, Z, alpha=0.3, cmap='viridis')
-    plt.scatter(X[:, 0], X[:, 1], c=y, s=40, cmap='viridis', edgecolors='k')
-    plt.title(title)
-    plt.xlabel('Feature 1')
-    plt.ylabel('Feature 2')
-    plt.tight_layout()
-    plt.show()
-
-# Plot the decision boundary
-plot_decision_boundary(
-    model_2d, 
-    X_2d, 
-    y_2d, 
-    'MLP Decision Boundary'
-)"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Step 3: Compare different architectures</p>
-                <p>Let's compare how different MLP architectures perform on the same dataset.</p>
-              </div>
-
-              <NotebookCell
-                cellId="cell3"
-                executionCount={4}
-                initialCode="# Define different architectures to compare
-architectures = [
-    ([10], '10 Neurons, 1 Hidden Layer'),
-    ([100], '100 Neurons, 1 Hidden Layer'),
-    ([10, 10], '10 Neurons, 2 Hidden Layers'),
-    ([100, 100], '100 Neurons, 2 Hidden Layers'),
-    ([100, 50, 25], '100-50-25 Neurons, 3 Hidden Layers')
-]
-
-# Train and evaluate each architecture
-results = []
-
-for layers, name in architectures:
-    # Build model with this architecture
-    model = Sequential()
-    
-    # Add input layer
-    model.add(Dense(layers[0], activation='relu', input_shape=(X_train_2d_scaled.shape[1],)))
-    
-    # Add additional hidden layers
-    for units in layers[1:]:
-        model.add(Dense(units, activation='relu'))
-    
-    # Add output layer
-    model.add(Dense(1, activation='sigmoid'))
-    
-    # Compile
-    model.compile(
-        optimizer=Adam(learning_rate=0.001),
-        loss='binary_crossentropy',
-        metrics=['accuracy']
-    )
-    
-    # Train
-    model.fit(
-        X_train_2d_scaled, y_train_2d,
-        epochs=50,
-        batch_size=32,
-        validation_split=0.2,
-        verbose=0
-    )
-    
-    # Evaluate
-    _, accuracy = model.evaluate(X_test_2d_scaled, y_test_2d, verbose=0)
-    results.append((name, accuracy))
-
-# Print results
-print('Architecture Comparison:')
-for name, accuracy in results:
-    print(f'{name}: {accuracy:.4f} accuracy')"
-                readOnly={false}
-                onExecute={handleExecuteCode}
-              />
-
-              <div className="text-neutral-700 px-4 py-2 border-l-4 border-neutral-300 bg-neutral-50">
-                <p className="font-medium text-neutral-900">Try it yourself!</p>
-                <p>Modify the code above to experiment with different aspects of MLPs:</p>
-                <ul className="list-disc list-inside mt-2">
-                  <li>Try different activation functions (ReLU, tanh, sigmoid) and compare their performance</li>
-                  <li>Experiment with different optimizers (SGD, RMSprop, Adam) and learning rates</li>
-                  <li>Add regularization techniques like L1/L2 regularization or dropout to prevent overfitting</li>
-                  <li>Implement a regression MLP for predicting continuous values</li>
-                  <li>Visualize the training process with learning curves (loss and accuracy over epochs)</li>
-                </ul>
-              </div>
-            </div>
-          </div>
         </TabsContent>
       </Tabs>
     </div>

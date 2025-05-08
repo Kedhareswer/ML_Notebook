@@ -348,7 +348,7 @@ export default function RegularizedRegressionPage() {
               <ArrowLeft className="mr-2 h-4 w-4" /> Polynomial Regression
             </Link>
           </Button>
-          <Button asChild variant="notebook">
+          <Button asChild variant="default">
             <Link href="/models/logistic-regression">
               Next: Logistic Regression <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
@@ -368,7 +368,7 @@ export default function RegularizedRegressionPage() {
           </TabsTrigger>
           <TabsTrigger value="notebook" className="flex items-center gap-2 data-[state=active]:bg-white">
             <Code className="h-4 w-4" />
-            <span>Code Implementation</span>
+            <span>Implementation</span>
           </TabsTrigger>
         </TabsList>
 
@@ -588,7 +588,7 @@ export default function RegularizedRegressionPage() {
         <TabsContent value="notebook" className="space-y-8">
           <div className="bg-white border border-neutral-300 rounded-lg p-6">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-neutral-900 mb-2">Ridge and Lasso Implementation</h2>
+              <h2 className="text-2xl font-bold text-neutral-900 mb-2">Ridge and Lasso in Practice</h2>
               <p className="text-neutral-700">
                 This notebook demonstrates how to implement Ridge and Lasso regression using Python and scikit-learn.
                 Execute each cell to see the results.
@@ -722,7 +722,6 @@ elastic_net_params = {
 # Create grid searches
 ridge_grid = GridSearchCV(Ridge(), ridge_params, cv=5, scoring='neg_mean_squared_error')
 lasso_grid = GridSearchCV(Lasso(), lasso_params, cv=5, scoring='neg_mean_squared_error')
-elastic_net_grid = GridSearch  lasso_params, cv=5, scoring='neg_mean_squared_error')
 elastic_net_grid = GridSearchCV(ElasticNet(), elastic_net_params, cv=5, scoring='neg_mean_squared_error')
 
 # Fit grid searches

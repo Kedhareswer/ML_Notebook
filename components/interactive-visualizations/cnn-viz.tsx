@@ -266,10 +266,8 @@ export default function CNNVisualization({ width = 600, height = 400 }: CNNVisua
       for (let j = 0; j < filterSize; j++) {
         // Generate a pattern based on filter and position
         const val = (Math.sin((i + j) * (activeFilter + 1) * 0.5) + 1) / 2
-        const r = Math.floor(val * 200)
-        const g = Math.floor((1 - val) * 200)
-        const b = Math.floor(Math.abs(0.5 - val) * 400)
-        ctx.fillStyle = `rgb(${r}, ${g}, ${b})`
+        const gray = Math.floor(val * 200)
+        ctx.fillStyle = `rgb(${gray}, ${gray}, ${gray})`
         ctx.fillRect(
           filterVisX - filterVisSize / 2 + j * filterPixelSize,
           filterVisY + i * filterPixelSize,

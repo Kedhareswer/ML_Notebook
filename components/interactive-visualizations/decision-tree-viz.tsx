@@ -206,19 +206,18 @@ export default function DecisionTreeVisualization({ width = 800, height = 500 }:
 
         // Color based on level (leaf nodes are different)
         if (level >= depth) {
-          // Leaf nodes - use different colors for different classes
+          // Leaf nodes - use different shades of gray
           if (datasetType === "classification") {
             const classIndex = Math.floor(Math.random() * (classes?.length || 2))
-            const colors = ["#4CAF50", "#2196F3", "#FFC107", "#9C27B0", "#F44336"]
-            ctx.fillStyle = colors[classIndex % colors.length]
+            const grayValue = 200 - classIndex * 40
+            ctx.fillStyle = `rgb(${grayValue}, ${grayValue}, ${grayValue})`
           } else {
-            // For regression, use a gradient based on the predicted value
+            // For regression, use a gradient of grays
             const predictedValue = Math.random() * 100
             const normalizedValue = predictedValue / 100
-            // Create a gradient from blue to red
-            const r = Math.floor(normalizedValue * 255)
-            const b = Math.floor((1 - normalizedValue) * 255)
-            ctx.fillStyle = `rgb(${r}, 100, ${b})`
+            // Create a gradient from light to dark gray
+            const grayValue = Math.floor(255 - normalizedValue * 200)
+            ctx.fillStyle = `rgb(${grayValue}, ${grayValue}, ${grayValue})`
           }
         } else {
           ctx.fillStyle = "#555" // Decision nodes
@@ -408,15 +407,14 @@ export default function DecisionTreeVisualization({ width = 800, height = 500 }:
         const classValue = getClass(i * cellWidth, j * cellHeight)
 
         if (datasetType === "classification") {
-          // For classification, use distinct colors for classes
-          const colors = ["rgba(33, 150, 243, 0.2)", "rgba(76, 175, 80, 0.2)", "rgba(255, 193, 7, 0.2)"]
-          ctx.fillStyle = colors[(classValue as number) % colors.length]
+          // For classification, use shades of gray
+          const grayShade = 230 - (classValue as number) * 50
+          ctx.fillStyle = `rgba(${grayShade}, ${grayShade}, ${grayShade}, 0.2)`
         } else {
-          // For regression, use a color gradient
+          // For regression, use a grayscale gradient
           const normalizedValue = (classValue as number) / 100
-          const r = Math.floor(normalizedValue * 255)
-          const b = Math.floor((1 - normalizedValue) * 255)
-          ctx.fillStyle = `rgba(${r}, 100, ${b}, 0.2)`
+          const grayValue = Math.floor(255 - normalizedValue * 200)
+          ctx.fillStyle = `rgba(${grayValue}, ${grayValue}, ${grayValue}, 0.2)`
         }
 
         ctx.fillRect(x, y, cellWidth, cellHeight)
