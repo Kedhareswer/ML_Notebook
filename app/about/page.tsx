@@ -2,6 +2,7 @@ import Link from "next/link"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, BookOpen, LineChart, GitBranch, Network } from "lucide-react"
+import { Analytics } from "@vercel/analytics/react"
 
 export default function About() {
   return (
@@ -151,3 +152,4 @@ export default function About() {
     </main>
   )
 }
+<Analytics />
